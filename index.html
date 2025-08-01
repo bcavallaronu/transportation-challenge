@@ -234,21 +234,17 @@
 
     <script>
         // Configuration - Replace with your JSONBin.io bin ID
-const API_CONFIG = {
-    binId: '688d10247b4b8670d8ab29a9',
-    baseUrl: 'https://api.jsonbin.io/v3/b/'
-};
+        const API_CONFIG = {
+            binId: '688d10247b4b8670d8ab29a9', // Replace this with your actual bin ID
+            baseUrl: 'https://api.jsonbin.io/v3/b/'
+        };
         
         let teams = [];
         let challenges = [];
         
         async function loadData() {
             try {
-                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`, {
-                    headers: {
-                        'X-JSON-Path': '$'
-                    }
-                });
+                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`);
                 
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
