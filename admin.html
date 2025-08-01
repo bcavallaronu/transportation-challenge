@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Transportation Challenge</title>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #343a40 0%, #495057 100%);
+            --bg-color: #343a40;
+            --bg-color-2: #495057;
+            --card-bg: white;
+            --text-color: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --admin-primary: #007bff;
+        }
+        
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            --bg-color: #1a202c;
+            --bg-color-2: #2d3748;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --text-light: #a0aec0;
+            --border-color: #4a5568;
+            --admin-primary: #4299e1;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +35,10 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             padding: 20px;
+            transition: all 0.3s ease;
         }
         
         .container {
@@ -27,6 +50,7 @@
             text-align: center;
             color: white;
             margin-bottom: 30px;
+            position: relative;
         }
         
         .header h1 {
@@ -37,6 +61,25 @@
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
         }
         
         .loading {
@@ -64,14 +107,35 @@
         }
         
         .panel {
-            background: white;
+            background: var(--card-bg);
+            color: var(--text-color);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .panel:nth-child(1) { animation-delay: 0.1s; }
+        .panel:nth-child(2) { animation-delay: 0.2s; }
+        .panel:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
         }
         
         .panel h2 {
-            color: #333;
+            color: var(--text-color);
             margin-bottom: 20px;
             text-align: center;
             font-size: 1.8em;
@@ -83,26 +147,34 @@
         }
         
         .submission-card {
-            background: #f8f9fa;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
             border-left: 5px solid #ffc107;
+            transition: all 0.3s ease;
+        }
+        
+        .submission-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .submission-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
         
         .submission-info {
             font-weight: bold;
+            color: var(--text-color);
         }
         
         .submission-time {
-            color: #666;
+            color: var(--text-light);
             font-size: 0.9em;
         }
         
@@ -114,7 +186,13 @@
             border-radius: 8px;
             margin: 10px 0;
             cursor: pointer;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .photo-preview:hover {
+            border-color: var(--admin-primary);
+            transform: scale(1.02);
         }
         
         .approval-buttons {
@@ -130,6 +208,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
         
         .approve-btn {
@@ -137,9 +216,19 @@
             color: white;
         }
         
+        .approve-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
         .reject-btn {
             background: #dc3545;
             color: white;
+        }
+        
+        .reject-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
         }
         
         .admin-section {
@@ -147,7 +236,7 @@
         }
         
         .admin-section h3 {
-            color: #555;
+            color: var(--text-color);
             margin-bottom: 15px;
             font-size: 1.3em;
         }
@@ -156,23 +245,32 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 10px;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1em;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--admin-primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
         }
         
         button {
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            background: linear-gradient(135deg, var(--admin-primary), #0056b3);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+            box-shadow: 0 6px 20px rgba(0,123,255,0.3);
         }
         
         button:disabled {
@@ -190,15 +288,49 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 8px;
             border-radius: 8px;
-            background: #f8f9fa;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
         }
         
-        .team-row.first { background: linear-gradient(135deg, #ffd700, #ffed4e); }
-        .team-row.second { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); }
-        .team-row.third { background: linear-gradient(135deg, #cd7f32, #daa520); }
+        .team-row:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .team-row.first { 
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-color: #ffaa00;
+            color: #333;
+        }
+        .team-row.second { 
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            border-color: #999;
+            color: #333;
+        }
+        .team-row.third { 
+            background: linear-gradient(135deg, #cd7f32, #daa520);
+            border-color: #b8860b;
+            color: white;
+        }
+        
+        .team-avatar-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--admin-primary), #0056b3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+        }
         
         .challenge-list {
             max-height: 300px;
@@ -206,11 +338,18 @@
         }
         
         .challenge-item {
-            background: #f8f9fa;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
             padding: 10px;
             margin-bottom: 8px;
             border-radius: 8px;
-            border-left: 4px solid #007bff;
+            border-left: 4px solid var(--admin-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .challenge-item:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .modal {
@@ -222,6 +361,12 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .modal-content {
@@ -229,9 +374,16 @@
             margin: 50px auto;
             width: 90%;
             max-width: 800px;
-            background: white;
+            background: var(--card-bg);
+            color: var(--text-color);
             border-radius: 10px;
             padding: 20px;
+            animation: slideInDown 0.3s ease;
+        }
+        
+        @keyframes slideInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .close {
@@ -241,11 +393,13 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            color: #aaa;
+            color: var(--text-light);
+            transition: all 0.3s ease;
         }
         
         .close:hover {
-            color: #000;
+            color: var(--text-color);
+            transform: scale(1.1);
         }
         
         .modal img {
@@ -260,6 +414,7 @@
             margin-bottom: 15px;
             text-align: center;
             font-weight: bold;
+            animation: slideInDown 0.3s ease;
         }
         
         .status-success {
@@ -273,11 +428,53 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Dark theme specific adjustments */
+        [data-theme="dark"] .status-success {
+            background: rgba(72, 187, 120, 0.2);
+            color: #68d391;
+            border-color: #68d391;
+        }
+        
+        [data-theme="dark"] .status-error {
+            background: rgba(245, 101, 101, 0.2);
+            color: #f56565;
+            border-color: #f56565;
+        }
+        
+        [data-theme="dark"] .status-info {
+            background: rgba(66, 153, 225, 0.2);
+            color: #4299e1;
+            border-color: #4299e1;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .theme-toggle {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
             <h1>🔧 Admin Panel</h1>
             <p>Alternative Transportation Challenge Management</p>
         </div>
@@ -306,6 +503,7 @@
                     <h2>➕ Add Team</h2>
                     <div class="admin-section">
                         <input type="text" id="new-team-name" placeholder="Team Name" maxlength="50">
+                        <input type="file" id="team-avatar-upload" accept="image/*" placeholder="Team Avatar (Optional)">
                         <button onclick="addTeam()" id="add-team-btn">Add Team</button>
                     </div>
                 </div>
@@ -385,6 +583,57 @@
         let teams = [];
         let challenges = [];
         let pendingSubmissions = [];
+        
+        // Theme handling
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+        
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+        
+        // Generate avatar for team (same as public leaderboard)
+        function getTeamAvatar(teamName, avatarUrl = null, small = false) {
+            const className = small ? 'team-avatar-small' : 'team-avatar';
+            if (avatarUrl) {
+                return `<img src="${avatarUrl}" alt="${teamName}" class="${className}">`;
+            } else {
+                // Generate initials from team name
+                const initials = teamName.split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('')
+                    .substring(0, 2);
+                return `<div class="${className}">${initials}</div>`;
+            }
+        }
+        
+        // Calculate achievement badges for a team (same logic as public)
+        function getTeamBadges(teamName) {
+            const badges = [];
+            const team = teams.find(t => t.name === teamName);
+            if (!team) return badges;
+            
+            if (team.score >= 20) badges.push('🚶‍♀️');
+            if (team.score >= 40) badges.push('🚌');
+            if (team.score >= 60) badges.push('🚲');
+            if (team.score >= 80) badges.push('🌱');
+            if (team.score >= 100) badges.push('⭐');
+            
+            return badges;
+        }
         
         async function loadData() {
             try {
@@ -527,7 +776,7 @@
             leaderboardPreview.innerHTML = '';
             
             if (sortedTeams.length === 0) {
-                leaderboardPreview.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No teams yet</p>';
+                leaderboardPreview.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">No teams yet</p>';
                 return;
             }
             
@@ -538,9 +787,16 @@
                 else if (index === 1) rankClass = 'second';
                 else if (index === 2) rankClass = 'third';
                 
+                const badges = getTeamBadges(team.name);
+                const avatar = getTeamAvatar(team.name, team.avatar, true);
+                
                 teamRow.className = `team-row ${rankClass}`;
                 teamRow.innerHTML = `
-                    <span>#${index + 1} ${team.name}</span>
+                    <div style="display: flex; align-items: center;">
+                        ${avatar}
+                        <span>#${index + 1} ${team.name}</span>
+                        ${badges.map(badge => `<span style="margin-left: 5px;">${badge}</span>`).join('')}
+                    </div>
                     <span>${team.score} pts</span>
                 `;
                 leaderboardPreview.appendChild(teamRow);
@@ -591,6 +847,7 @@
         
         async function addTeam() {
             const teamName = document.getElementById('new-team-name').value.trim();
+            const avatarUpload = document.getElementById('team-avatar-upload');
             
             if (!teamName) {
                 showStatus('Please enter a team name', 'error');
@@ -602,11 +859,48 @@
                 return;
             }
             
-            teams.push({ name: teamName, score: 0 });
+            let avatarUrl = null;
+            
+            // Handle avatar upload if provided
+            if (avatarUpload.files.length > 0) {
+                const file = avatarUpload.files[0];
+                
+                // Check file size (limit to 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showStatus('Avatar image must be smaller than 2MB', 'error');
+                    return;
+                }
+                
+                // Convert to base64
+                try {
+                    avatarUrl = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+                } catch (error) {
+                    showStatus('Error processing avatar image', 'error');
+                    return;
+                }
+            }
+            
+            const newTeam = { 
+                name: teamName, 
+                score: 0
+            };
+            
+            if (avatarUrl) {
+                newTeam.avatar = avatarUrl;
+            }
+            
+            teams.push(newTeam);
             
             if (await saveData()) {
                 document.getElementById('new-team-name').value = '';
+                document.getElementById('team-avatar-upload').value = '';
                 updateAllDisplays();
+                showStatus(`Added team: ${teamName}`, 'success');
             }
         }
         
@@ -789,6 +1083,7 @@
         }
         
         // Initialize
+        initTheme();
         loadData();
     </script>
 </body>
