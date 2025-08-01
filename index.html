@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative Transportation Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+        
+        .error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 2px solid #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .event-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+        
+        .leaderboard {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .leaderboard h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+        
+        .team-row {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .team-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .team-row.first { 
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: 3px solid #ffaa00;
+        }
+        .team-row.second { 
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            border: 3px solid #999;
+        }
+        .team-row.third { 
+            background: linear-gradient(135deg, #cd7f32, #daa520);
+            border: 3px solid #b8860b;
+        }
+        .team-row.other { 
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 3px solid #dee2e6;
+        }
+        
+        .rank {
+            font-size: 2em;
+            font-weight: bold;
+            margin-right: 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .team-name {
+            flex-grow: 1;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        
+        .score {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .trophy {
+            font-size: 1.5em;
+            margin-left: 15px;
+        }
+        
+        .challenges-preview {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .challenges-preview h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        .challenge-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .challenge-points {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            font-size: 1.1em;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚲 Alternative Transportation Challenge</h1>
+            <p>Live Leaderboard</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            Loading current standings...
+        </div>
+        
+        <div id="error-message" class="error" style="display: none;">
+            <h3>Unable to load data</h3>
+            <p>Please check your internet connection or contact the event organizers.</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <div class="event-info">
+                <h3>Week-Long Competition in Progress</h3>
+                <p>Complete challenges using sustainable transportation methods to earn points!</p>
+            </div>
+            
+            <div class="leaderboard">
+                <h2>🏆 Current Standings</h2>
+                <div id="leaderboard-content">
+                    <!-- Teams will be populated here -->
+                </div>
+            </div>
+            
+            <div class="challenges-preview">
+                <h3>📋 Available Challenges</h3>
+                <div class="challenge-grid" id="challenges-grid">
+                    <!-- Challenges will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="last-updated" class="last-updated pulse" style="display: none;">
+            Last Updated: <span id="last-updated-time"></span>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - Replace with your JSONBin.io bin ID
+const API_CONFIG = {
+    binId: '688d10247b4b8670d8ab29a9',
+    baseUrl: 'https://api.jsonbin.io/v3/b/'
+};
+        
+        let teams = [];
+        let challenges = [];
+        
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`, {
+                    headers: {
+                        'X-JSON-Path': '$'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                
+                const data = await response.json();
+                teams = data.record.teams || [];
+                challenges = data.record.challenges || [];
+                
+                updateDisplay();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError();
+            }
+        }
+        
+        function updateDisplay() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('last-updated').style.display = 'block';
+            
+            updateLeaderboard();
+            updateChallengesGrid();
+            updateLastUpdated();
+        }
+        
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-message').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('last-updated').style.display = 'none';
+        }
+        
+        function updateLeaderboard() {
+            teams.sort((a, b) => b.score - a.score);
+            
+            const leaderboardContent = document.getElementById('leaderboard-content');
+            leaderboardContent.innerHTML = '';
+            
+            if (teams.length === 0) {
+                leaderboardContent.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No teams registered yet</p>';
+                return;
+            }
+            
+            teams.forEach((team, index) => {
+                const teamRow = document.createElement('div');
+                let rankClass = 'other';
+                let trophy = '';
+                
+                if (index === 0) {
+                    rankClass = 'first';
+                    trophy = '🥇';
+                } else if (index === 1) {
+                    rankClass = 'second';
+                    trophy = '🥈';
+                } else if (index === 2) {
+                    rankClass = 'third';
+                    trophy = '🥉';
+                }
+                
+                teamRow.className = `team-row ${rankClass}`;
+                teamRow.innerHTML = `
+                    <div class="rank">#${index + 1}</div>
+                    <div class="team-name">${team.name}</div>
+                    <div class="score">${team.score} pts</div>
+                    <div class="trophy">${trophy}</div>
+                `;
+                leaderboardContent.appendChild(teamRow);
+            });
+        }
+        
+        function updateChallengesGrid() {
+            const challengesGrid = document.getElementById('challenges-grid');
+            challengesGrid.innerHTML = '';
+            
+            challenges.forEach(challenge => {
+                const challengeItem = document.createElement('div');
+                challengeItem.className = 'challenge-item';
+                challengeItem.innerHTML = `
+                    <div style="margin-bottom: 8px; font-weight: 600;">${challenge.name}</div>
+                    <div class="challenge-points">${challenge.points} points</div>
+                    <div style="font-size: 0.9em; color: #666; margin-top: 5px;">Category: ${challenge.category}</div>
+                `;
+                challengesGrid.appendChild(challengeItem);
+            });
+        }
+        
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('last-updated-time').textContent = now.toLocaleString();
+        }
+        
+        // Initialize the leaderboard
+        loadData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
