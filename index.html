@@ -5,26 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alternative Transportation Challenge</title>
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-color: #667eea;
-            --bg-color-2: #764ba2;
-            --card-bg: white;
-            --text-color: #333;
-            --text-light: #666;
-            --border-color: #ddd;
-        }
-        
-        [data-theme="dark"] {
-            --primary-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-            --bg-color: #2d3748;
-            --bg-color-2: #4a5568;
-            --card-bg: #1a202c;
-            --text-color: #e2e8f0;
-            --text-light: #a0aec0;
-            --border-color: #4a5568;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -33,10 +13,9 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            transition: all 0.3s ease;
         }
         
         .container {
@@ -48,7 +27,6 @@
             text-align: center;
             color: white;
             margin-bottom: 40px;
-            position: relative;
         }
         
         .header h1 {
@@ -60,25 +38,6 @@
         .header p {
             font-size: 1.3em;
             opacity: 0.9;
-        }
-        
-        .theme-toggle {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 25px;
-            padding: 8px 16px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-        
-        .theme-toggle:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
         }
         
         .loading {
@@ -108,18 +67,17 @@
         }
         
         .leaderboard {
-            background: var(--card-bg);
-            color: var(--text-color);
+            background: white;
+            color: #333;
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             margin-bottom: 30px;
-            transition: all 0.3s ease;
         }
         
         .leaderboard h2 {
             text-align: center;
-            color: var(--text-color);
+            color: #333;
             margin-bottom: 30px;
             font-size: 2.2em;
         }
@@ -174,13 +132,8 @@
         }
         .team-row.other { 
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 3px solid var(--border-color);
-            color: var(--text-color);
-        }
-        
-        [data-theme="dark"] .team-row.other {
-            background: linear-gradient(135deg, #2d3748, #4a5568);
-            color: var(--text-color);
+            border: 3px solid #dee2e6;
+            color: #333;
         }
         
         .rank {
@@ -239,7 +192,7 @@
         
         .progress-label {
             font-size: 0.9em;
-            color: var(--text-light);
+            color: #666;
             margin-bottom: 5px;
         }
         
@@ -267,13 +220,13 @@
         
         .progress-text {
             font-size: 0.8em;
-            color: var(--text-light);
+            color: #666;
         }
         
         .score {
             font-size: 1.6em;
             font-weight: bold;
-            color: var(--text-color);
+            color: #333;
             margin-right: 15px;
         }
         
@@ -290,18 +243,17 @@
         }
         
         .challenges-preview {
-            background: var(--card-bg);
-            color: var(--text-color);
+            background: white;
+            color: #333;
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             margin-bottom: 30px;
-            transition: all 0.3s ease;
         }
         
         .challenges-preview h3 {
             text-align: center;
-            color: var(--text-color);
+            color: #333;
             margin-bottom: 20px;
             font-size: 1.8em;
         }
@@ -313,14 +265,14 @@
         }
         
         .challenge-item {
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
             padding: 15px;
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
-            color: var(--text-color);
+            color: #333;
         }
         
         .challenge-item:hover {
@@ -359,14 +311,12 @@
             .team-name { font-size: 1.2em; }
             .score { font-size: 1.3em; }
             .progress-section { margin-left: 10px; min-width: 120px; }
-            .theme-toggle { position: static; margin-bottom: 20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
             <h1>🚲 Alternative Transportation Challenge</h1>
             <p>Live Leaderboard</p>
         </div>
@@ -514,7 +464,6 @@
         }
         
         // Initialize the leaderboard
-        initTheme();
         loadData();
         
         // Auto-refresh every 30 seconds
