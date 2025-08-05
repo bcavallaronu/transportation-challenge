@@ -509,7 +509,6 @@
 <body>
     <div class="container">
         <div class="header">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
             <h1>🔧 Admin Panel</h1>
             <p>Alternative Transportation Challenge Management</p>
         </div>
@@ -539,7 +538,7 @@
                     <div class="admin-section">
                         <input type="text" id="new-team-name" placeholder="Team Name" maxlength="50">
                         
-                        <h4 style="margin: 15px 0 10px 0; color: var(--text-color);">Choose Team Avatar:</h4>
+                        <h4 style="margin: 15px 0 10px 0; color: #333;">Choose Team Avatar:</h4>
                         
                         <div class="emoji-grid" id="emoji-grid">
                             <!-- Emoji options will be populated here -->
@@ -633,27 +632,6 @@
             '⚡', '🔋', '☀️', '🌟', '💚', '🏃‍♀️',
             '🏃‍♂️', '🚀', '⭐', '🏆', '🎯', '💪'
         ];
-        
-        // Theme handling
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            const button = document.querySelector('.theme-toggle');
-            button.textContent = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
-        
-        // Initialize theme
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            const button = document.querySelector('.theme-toggle');
-            button.textContent = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
         
         // Initialize emoji grid
         function initEmojiGrid() {
@@ -1143,7 +1121,6 @@
         }
         
         // Initialize
-        initTheme();
         initEmojiGrid();
         loadData();
     </script>
