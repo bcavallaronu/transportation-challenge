@@ -63,25 +63,6 @@
             opacity: 0.9;
         }
         
-        .logout-btn {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: rgba(220, 53, 69, 0.8);
-            border: 2px solid rgba(220, 53, 69, 0.9);
-            border-radius: 25px;
-            padding: 8px 16px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(220, 53, 69, 1);
-            transform: translateY(-2px);
-        }
-        
         .theme-toggle {
             position: absolute;
             top: 0;
@@ -99,105 +80,6 @@
         .theme-toggle:hover {
             background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
-        }
-        
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-        
-        .login-card {
-            background: var(--card-bg);
-            color: var(--text-color);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            animation: slideInDown 0.5s ease;
-        }
-        
-        .login-card h2 {
-            color: var(--text-color);
-            margin-bottom: 10px;
-            font-size: 2em;
-        }
-        
-        .login-card p {
-            color: var(--text-light);
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-        
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .password-input {
-            padding: 15px;
-            font-size: 1.1em;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .password-input:focus {
-            border-color: var(--admin-primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-        }
-        
-        .login-btn {
-            padding: 15px;
-            font-size: 1.1em;
-            background: linear-gradient(135deg, var(--admin-primary), #0056b3);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,123,255,0.3);
-        }
-        
-        .login-error {
-            color: #f56565;
-            margin-top: 15px;
-            font-weight: bold;
-            animation: shake 0.5s ease;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .login-help {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9em;
-            color: var(--text-light);
         }
         
         .loading {
@@ -608,16 +490,6 @@
             transform: scale(1.05);
             box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
         }
-        
-        .upload-option {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .avatar-options h4 {
-            color: var(--text-color);
-        }
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -636,42 +508,11 @@
 </head>
 <body>
     <div class="container">
-        <!-- Login Overlay -->
-        <div id="login-overlay" class="login-overlay">
-            <div class="login-card">
-                <h2>🔒 Admin Access</h2>
-                <p>Enter the admin password to access the challenge management panel</p>
-                
-                <div class="login-form">
-                    <input 
-                        type="password" 
-                        id="password-input" 
-                        class="password-input" 
-                        placeholder="Enter admin password"
-                        onkeypress="handlePasswordKeyPress(event)"
-                    >
-                    <button class="login-btn" onclick="attemptLogin()">
-                        🚀 Access Admin Panel
-                    </button>
-                </div>
-                
-                <div id="login-error" class="login-error" style="display: none;"></div>
-                
-                <div class="login-help">
-                    <p><strong>For Event Organizers Only</strong></p>
-                    <p>If you forgot the password, check your event documentation or contact the system administrator.</p>
-                </div>
-            </div>
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            <h1>🔧 Admin Panel</h1>
+            <p>Alternative Transportation Challenge Management</p>
         </div>
-        
-        <!-- Main Admin Content -->
-        <div id="admin-content" style="display: none;">
-            <div class="header">
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-                <h1>🔧 Admin Panel</h1>
-                <p>Alternative Transportation Challenge Management</p>
-            </div>
         
         <div id="loading" class="loading">
             Loading admin panel...
@@ -700,15 +541,8 @@
                         
                         <h4 style="margin: 15px 0 10px 0; color: var(--text-color);">Choose Team Avatar:</h4>
                         
-                        <div class="avatar-options">
-                            <div class="emoji-grid" id="emoji-grid">
-                                <!-- Emoji options will be populated here -->
-                            </div>
-                            
-                            <div class="upload-option">
-                                <p style="margin: 10px 0 5px 0; color: var(--text-light); font-size: 0.9em;">Or upload custom image:</p>
-                                <input type="file" id="team-avatar-upload" accept="image/*" placeholder="Team Avatar (Optional)">
-                            </div>
+                        <div class="emoji-grid" id="emoji-grid">
+                            <!-- Emoji options will be populated here -->
                         </div>
                         
                         <button onclick="addTeam()" id="add-team-btn">Add Team</button>
@@ -726,7 +560,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h2>📤 Submit Challenge (Demo)</h2>
+                    <h2>📤 Submit Challenge</h2>
                     <div class="admin-section">
                         <select id="demo-team-select">
                             <option value="">Select Team</option>
@@ -735,7 +569,6 @@
                             <option value="">Select Challenge</option>
                         </select>
                         <textarea id="demo-description" placeholder="Description of challenge completion" rows="3"></textarea>
-                        <input type="file" id="photo-upload" accept="image/*">
                         <button onclick="submitChallenge()" id="submit-challenge-btn">Submit for Review</button>
                     </div>
                 </div>
@@ -766,7 +599,6 @@
                     </div>
                 </div>
             </div>
-            </div>
         </div>
         
         <!-- Photo Modal -->
@@ -785,84 +617,13 @@
         const API_CONFIG = {
             binId: '688d10247b4b8670d8ab29a9', // Your actual bin ID
             apiKey: '$2a$10$ltG7teCPt//ubzYCXRXGKe90iwc/iq3/TlDcugLSY8g82hWo7kwSW', // Your actual API key
-            baseUrl: 'https://api.jsonbin.io/v3/b/',
-            // CHANGE THIS PASSWORD for your event!
-            adminPassword: 'transport2024' // Change this to your desired password
+            baseUrl: 'https://api.jsonbin.io/v3/b/'
         };
         
         let teams = [];
         let challenges = [];
         let pendingSubmissions = [];
         let selectedEmoji = null;
-        
-        // Authentication functions
-        function checkAuthentication() {
-            const isAuthenticated = sessionStorage.getItem('adminAuthenticated') === 'true';
-            
-            if (isAuthenticated) {
-                showAdminPanel();
-            } else {
-                showLoginOverlay();
-            }
-        }
-        
-        function showLoginOverlay() {
-            document.getElementById('login-overlay').style.display = 'flex';
-            document.getElementById('admin-content').style.display = 'none';
-            document.getElementById('password-input').focus();
-        }
-        
-        function showAdminPanel() {
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('admin-content').style.display = 'block';
-        }
-        
-        function attemptLogin() {
-            const passwordInput = document.getElementById('password-input');
-            const errorDiv = document.getElementById('login-error');
-            const enteredPassword = passwordInput.value;
-            
-            if (enteredPassword === API_CONFIG.adminPassword) {
-                // Successful login
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                errorDiv.style.display = 'none';
-                showAdminPanel();
-                
-                // Load data after successful login
-                loadData();
-            } else {
-                // Failed login
-                errorDiv.textContent = '❌ Incorrect password. Please try again.';
-                errorDiv.style.display = 'block';
-                passwordInput.value = '';
-                passwordInput.focus();
-                
-                // Add shake animation to the card
-                const loginCard = document.querySelector('.login-card');
-                loginCard.style.animation = 'none';
-                setTimeout(() => {
-                    loginCard.style.animation = 'slideInDown 0.5s ease, shake 0.5s ease';
-                }, 10);
-            }
-        }
-        
-        function handlePasswordKeyPress(event) {
-            if (event.key === 'Enter') {
-                attemptLogin();
-            }
-        }
-        
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                sessionStorage.removeItem('adminAuthenticated');
-                showLoginOverlay();
-                
-                // Clear any sensitive data
-                teams = [];
-                challenges = [];
-                pendingSubmissions = [];
-            }
-        }
         
         // Available emoji options for team avatars
         const emojiOptions = [
@@ -915,29 +676,10 @@
                 opt.classList.remove('selected');
             });
             
-            // Clear file upload if emoji is selected
-            document.getElementById('team-avatar-upload').value = '';
-            
             // Select new emoji
             element.classList.add('selected');
             selectedEmoji = emoji;
         }
-        
-        // Clear emoji selection when file is uploaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('team-avatar-upload');
-            if (fileInput) {
-                fileInput.addEventListener('change', function() {
-                    if (this.files.length > 0) {
-                        // Clear emoji selection
-                        document.querySelectorAll('.emoji-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        selectedEmoji = null;
-                    }
-                });
-            }
-        });
         
         // Generate avatar for team - updated to handle emoji avatars
         function getTeamAvatar(teamName, avatarUrl = null, small = false) {
@@ -1187,7 +929,6 @@
         
         async function addTeam() {
             const teamName = document.getElementById('new-team-name').value.trim();
-            const avatarUpload = document.getElementById('team-avatar-upload');
             
             if (!teamName) {
                 showStatus('Please enter a team name', 'error');
@@ -1199,50 +940,20 @@
                 return;
             }
             
-            let avatarUrl = null;
-            
-            // Check if emoji is selected
-            if (selectedEmoji) {
-                avatarUrl = selectedEmoji;
-            }
-            // Otherwise check for file upload
-            else if (avatarUpload.files.length > 0) {
-                const file = avatarUpload.files[0];
-                
-                // Check file size (limit to 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    showStatus('Avatar image must be smaller than 2MB', 'error');
-                    return;
-                }
-                
-                // Convert to base64
-                try {
-                    avatarUrl = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                } catch (error) {
-                    showStatus('Error processing avatar image', 'error');
-                    return;
-                }
-            }
-            
             const newTeam = { 
                 name: teamName, 
                 score: 0
             };
             
-            if (avatarUrl) {
-                newTeam.avatar = avatarUrl;
+            // Add emoji avatar if selected
+            if (selectedEmoji) {
+                newTeam.avatar = selectedEmoji;
             }
             
             teams.push(newTeam);
             
             if (await saveData()) {
                 document.getElementById('new-team-name').value = '';
-                document.getElementById('team-avatar-upload').value = '';
                 
                 // Clear emoji selection
                 document.querySelectorAll('.emoji-option').forEach(opt => {
@@ -1279,45 +990,34 @@
             const teamIndex = document.getElementById('demo-team-select').value;
             const challengeIndex = document.getElementById('demo-challenge-select').value;
             const description = document.getElementById('demo-description').value.trim();
-            const photoUpload = document.getElementById('photo-upload');
             
             if (teamIndex === '' || challengeIndex === '' || !description) {
                 showStatus('Please fill in all fields', 'error');
                 return;
             }
             
-            if (!photoUpload.files.length) {
-                showStatus('Please upload photo proof', 'error');
-                return;
-            }
-            
             const team = teams[teamIndex];
             const challenge = challenges[challengeIndex];
-            const file = photoUpload.files[0];
             
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const newSubmission = {
-                    id: Date.now(),
-                    teamName: team.name,
-                    challengeName: challenge.name,
-                    points: challenge.points,
-                    photoUrl: e.target.result,
-                    timestamp: new Date().toISOString(),
-                    description: description
-                };
-                
-                pendingSubmissions.push(newSubmission);
-                
-                if (await saveData()) {
-                    document.getElementById('demo-team-select').value = '';
-                    document.getElementById('demo-challenge-select').value = '';
-                    document.getElementById('demo-description').value = '';
-                    document.getElementById('photo-upload').value = '';
-                    updateAllDisplays();
-                }
+            const newSubmission = {
+                id: Date.now(),
+                teamName: team.name,
+                challengeName: challenge.name,
+                points: challenge.points,
+                photoUrl: null, // No photo required
+                timestamp: new Date().toISOString(),
+                description: description
             };
-            reader.readAsDataURL(file);
+            
+            pendingSubmissions.push(newSubmission);
+            
+            if (await saveData()) {
+                document.getElementById('demo-team-select').value = '';
+                document.getElementById('demo-challenge-select').value = '';
+                document.getElementById('demo-description').value = '';
+                updateAllDisplays();
+                showStatus('Challenge submitted for review!', 'success');
+            }
         }
         
         async function approveSubmission(submissionId) {
@@ -1358,11 +1058,20 @@
             
             document.getElementById('modal-title').textContent = 
                 `${submission.teamName} - ${submission.challengeName}`;
-            document.getElementById('modal-image').src = submission.photoUrl;
+            
+            const modalImage = document.getElementById('modal-image');
+            if (submission.photoUrl) {
+                modalImage.src = submission.photoUrl;
+                modalImage.style.display = 'block';
+            } else {
+                modalImage.style.display = 'none';
+            }
+            
             document.getElementById('modal-details').innerHTML = `
                 <p><strong>Points:</strong> ${submission.points}</p>
                 <p><strong>Submitted:</strong> ${new Date(submission.timestamp).toLocaleString()}</p>
                 <p><strong>Description:</strong> ${submission.description}</p>
+                ${!submission.photoUrl ? '<p><em>This is a text-based submission with no photo.</em></p>' : ''}
             `;
             document.getElementById('photo-modal').style.display = 'block';
         }
@@ -1435,8 +1144,8 @@
         
         // Initialize
         initTheme();
-        checkAuthentication(); // Check login first
         initEmojiGrid();
+        loadData();
     </script>
 </body>
 </html>
