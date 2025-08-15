@@ -5,28 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Transportation Challenge</title>
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #343a40 0%, #495057 100%);
-            --bg-color: #343a40;
-            --bg-color-2: #495057;
-            --card-bg: white;
-            --text-color: #333;
-            --text-light: #666;
-            --border-color: #ddd;
-            --admin-primary: #007bff;
-        }
-        
-        [data-theme="dark"] {
-            --primary-gradient: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            --bg-color: #1a202c;
-            --bg-color-2: #2d3748;
-            --card-bg: #2d3748;
-            --text-color: #e2e8f0;
-            --text-light: #a0aec0;
-            --border-color: #4a5568;
-            --admin-primary: #4299e1;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -35,10 +13,9 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #343a40 0%, #495057 100%);
             min-height: 100vh;
             padding: 20px;
-            transition: all 0.3s ease;
         }
         
         .container {
@@ -50,7 +27,6 @@
             text-align: center;
             color: white;
             margin-bottom: 30px;
-            position: relative;
         }
         
         .header h1 {
@@ -61,25 +37,6 @@
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
-        }
-        
-        .theme-toggle {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 25px;
-            padding: 8px 16px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-        
-        .theme-toggle:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
         }
         
         .loading {
@@ -107,8 +64,8 @@
         }
         
         .panel {
-            background: var(--card-bg);
-            color: var(--text-color);
+            background: white;
+            color: #333;
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -129,106 +86,21 @@
             }
         }
         
+        @keyframes slideInDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
         .panel:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.4);
         }
         
         .panel h2 {
-            color: var(--text-color);
+            color: #333;
             margin-bottom: 20px;
             text-align: center;
             font-size: 1.8em;
-        }
-        
-        .submissions-panel {
-            grid-column: 1 / -1;
-            margin-bottom: 20px;
-        }
-        
-        .submission-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 5px solid #ffc107;
-            transition: all 0.3s ease;
-        }
-        
-        .submission-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        
-        .submission-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .submission-info {
-            font-weight: bold;
-            color: var(--text-color);
-        }
-        
-        .submission-time {
-            color: var(--text-light);
-            font-size: 0.9em;
-        }
-        
-        .photo-preview {
-            width: 100%;
-            max-width: 300px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin: 10px 0;
-            cursor: pointer;
-            border: 2px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        
-        .photo-preview:hover {
-            border-color: var(--admin-primary);
-            transform: scale(1.02);
-        }
-        
-        .approval-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .approve-btn, .reject-btn {
-            flex: 1;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .approve-btn {
-            background: #28a745;
-            color: white;
-        }
-        
-        .approve-btn:hover {
-            background: #218838;
-            transform: translateY(-2px);
-        }
-        
-        .reject-btn {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .reject-btn:hover {
-            background: #c82333;
-            transform: translateY(-2px);
         }
         
         .admin-section {
@@ -236,7 +108,7 @@
         }
         
         .admin-section h3 {
-            color: var(--text-color);
+            color: #333;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
@@ -245,22 +117,22 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 10px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #dee2e6;
             border-radius: 8px;
             font-size: 1em;
-            background: var(--card-bg);
-            color: var(--text-color);
+            background: white;
+            color: #333;
             transition: all 0.3s ease;
         }
         
         input:focus, select:focus, textarea:focus {
-            border-color: var(--admin-primary);
+            border-color: #007bff;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
         
         button {
-            background: linear-gradient(135deg, var(--admin-primary), #0056b3);
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
             border: none;
             cursor: pointer;
@@ -291,8 +163,8 @@
             padding: 12px;
             margin-bottom: 8px;
             border-radius: 8px;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
             transition: all 0.3s ease;
         }
         
@@ -323,7 +195,7 @@
             border-radius: 50%;
             margin-right: 10px;
             object-fit: cover;
-            background: linear-gradient(135deg, var(--admin-primary), #0056b3);
+            background: linear-gradient(135deg, #007bff, #0056b3);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -338,74 +210,18 @@
         }
         
         .challenge-item {
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
             padding: 10px;
             margin-bottom: 8px;
             border-radius: 8px;
-            border-left: 4px solid var(--admin-primary);
+            border-left: 4px solid #007bff;
             transition: all 0.3s ease;
         }
         
         .challenge-item:hover {
             transform: translateX(3px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal-content {
-            position: relative;
-            margin: 50px auto;
-            width: 90%;
-            max-width: 800px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            border-radius: 10px;
-            padding: 20px;
-            animation: slideInDown 0.3s ease;
-        }
-        
-        @keyframes slideInDown {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-        }
-        
-        .close:hover {
-            color: var(--text-color);
-            transform: scale(1.1);
-        }
-        
-        .modal img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
         }
         
         .status-message {
@@ -435,40 +251,21 @@
             border: 1px solid #bee5eb;
         }
         
-        /* Dark theme specific adjustments */
-        [data-theme="dark"] .status-success {
-            background: rgba(72, 187, 120, 0.2);
-            color: #68d391;
-            border-color: #68d391;
-        }
-        
-        [data-theme="dark"] .status-error {
-            background: rgba(245, 101, 101, 0.2);
-            color: #f56565;
-            border-color: #f56565;
-        }
-        
-        [data-theme="dark"] .status-info {
-            background: rgba(66, 153, 225, 0.2);
-            color: #4299e1;
-            border-color: #4299e1;
-        }
-        
         .emoji-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             margin-bottom: 15px;
             padding: 15px;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: white;
+            border: 2px solid #dee2e6;
             border-radius: 10px;
         }
         
         .emoji-option {
             width: 50px;
             height: 50px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #dee2e6;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -476,7 +273,7 @@
             font-size: 1.8em;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: var(--card-bg);
+            background: white;
         }
         
         .emoji-option:hover {
@@ -485,11 +282,13 @@
         }
         
         .emoji-option.selected {
-            border-color: var(--admin-primary);
-            background: rgba(66, 153, 225, 0.1);
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.1);
             transform: scale(1.05);
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
         }
+        
+        /* Mobile responsiveness */
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -499,9 +298,15 @@
                 font-size: 2em;
             }
             
-            .theme-toggle {
-                position: static;
-                margin-bottom: 20px;
+            .emoji-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+            }
+            
+            .emoji-option {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4em;
             }
         }
     </style>
@@ -524,13 +329,6 @@
         
         <div id="content" style="display: none;">
             <div id="status-message" style="display: none;"></div>
-            
-            <div class="submissions-panel panel">
-                <h2>📋 Pending Review</h2>
-                <div id="pending-submissions-content">
-                    <!-- Pending submissions will be populated here -->
-                </div>
-            </div>
             
             <div class="dashboard">
                 <div class="panel">
@@ -559,7 +357,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h2>📤 Submit Challenge</h2>
+                    <h2>📤 Award Points</h2>
                     <div class="admin-section">
                         <select id="demo-team-select">
                             <option value="">Select Team</option>
@@ -567,8 +365,7 @@
                         <select id="demo-challenge-select">
                             <option value="">Select Challenge</option>
                         </select>
-                        <textarea id="demo-description" placeholder="Description of challenge completion" rows="3"></textarea>
-                        <button onclick="submitChallenge()" id="submit-challenge-btn">Submit for Review</button>
+                        <button onclick="awardPoints()" id="award-points-btn">Award Points</button>
                     </div>
                 </div>
             </div>
@@ -599,16 +396,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Photo Modal -->
-        <div id="photo-modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3 id="modal-title"></h3>
-                <img id="modal-image" src="" alt="Challenge Photo">
-                <div id="modal-details"></div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -621,7 +408,6 @@
         
         let teams = [];
         let challenges = [];
-        let pendingSubmissions = [];
         let selectedEmoji = null;
         
         // Available emoji options for team avatars
@@ -666,7 +452,7 @@
             if (avatarUrl) {
                 // Check if it's an emoji (single character) or image URL
                 if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="${className}" style="background: linear-gradient(135deg, #667eea, #764ba2);">${avatarUrl}</div>`;
+                    return `<div class="${className}" style="background: linear-gradient(135deg, #007bff, #0056b3);">${avatarUrl}</div>`;
                 } else { // Image URL
                     return `<img src="${avatarUrl}" alt="${teamName}" class="${className}">`;
                 }
@@ -712,7 +498,6 @@
                 const data = await response.json();
                 teams = data.record.teams || [];
                 challenges = data.record.challenges || [];
-                pendingSubmissions = data.record.pendingSubmissions || [];
                 
                 updateAllDisplays();
                 hideStatus();
@@ -728,7 +513,6 @@
                 const dataToSave = {
                     teams,
                     challenges,
-                    pendingSubmissions,
                     lastUpdated: new Date().toISOString()
                 };
                 
@@ -760,7 +544,6 @@
             document.getElementById('error-message').style.display = 'none';
             document.getElementById('content').style.display = 'block';
             
-            updatePendingSubmissions();
             updateLeaderboardPreview();
             updateChallengesList();
             updateDropdowns();
@@ -787,56 +570,13 @@
             document.getElementById('status-message').style.display = 'none';
         }
         
-        function updatePendingSubmissions() {
-            const pendingContent = document.getElementById('pending-submissions-content');
-            
-            if (pendingSubmissions.length === 0) {
-                pendingContent.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No pending submissions</p>';
-                return;
-            }
-            
-            pendingContent.innerHTML = '';
-            
-            pendingSubmissions.forEach(submission => {
-                const submissionCard = document.createElement('div');
-                submissionCard.className = 'submission-card';
-                submissionCard.innerHTML = `
-                    <div class="submission-header">
-                        <div class="submission-info">
-                            ${submission.teamName} - ${submission.challengeName}
-                        </div>
-                        <div class="submission-time">
-                            ${new Date(submission.timestamp).toLocaleString()}
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <strong>Points:</strong> ${submission.points} | 
-                        <strong>Description:</strong> ${submission.description}
-                    </div>
-                    <img src="${submission.photoUrl}" 
-                         alt="Challenge proof" 
-                         class="photo-preview" 
-                         onclick="openModal(${submission.id})">
-                    <div class="approval-buttons">
-                        <button class="approve-btn" onclick="approveSubmission(${submission.id})">
-                            ✓ Approve
-                        </button>
-                        <button class="reject-btn" onclick="rejectSubmission(${submission.id})">
-                            ✗ Reject
-                        </button>
-                    </div>
-                `;
-                pendingContent.appendChild(submissionCard);
-            });
-        }
-        
         function updateLeaderboardPreview() {
             const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
             const leaderboardPreview = document.getElementById('leaderboard-preview');
             leaderboardPreview.innerHTML = '';
             
             if (sortedTeams.length === 0) {
-                leaderboardPreview.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">No teams yet</p>';
+                leaderboardPreview.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No teams yet</p>';
                 return;
             }
             
@@ -964,109 +704,33 @@
             }
         }
         
-        async function submitChallenge() {
+        async function awardPoints() {
             const teamIndex = document.getElementById('demo-team-select').value;
             const challengeIndex = document.getElementById('demo-challenge-select').value;
-            const description = document.getElementById('demo-description').value.trim();
             
-            if (teamIndex === '' || challengeIndex === '' || !description) {
-                showStatus('Please fill in all fields', 'error');
+            if (teamIndex === '' || challengeIndex === '') {
+                showStatus('Please select both a team and a challenge', 'error');
                 return;
             }
             
             const team = teams[teamIndex];
             const challenge = challenges[challengeIndex];
             
-            const newSubmission = {
-                id: Date.now(),
-                teamName: team.name,
-                challengeName: challenge.name,
-                points: challenge.points,
-                photoUrl: null, // No photo required
-                timestamp: new Date().toISOString(),
-                description: description
-            };
-            
-            pendingSubmissions.push(newSubmission);
+            // Award points directly to the team
+            team.score += challenge.points;
             
             if (await saveData()) {
                 document.getElementById('demo-team-select').value = '';
                 document.getElementById('demo-challenge-select').value = '';
-                document.getElementById('demo-description').value = '';
                 updateAllDisplays();
-                showStatus('Challenge submitted for review!', 'success');
+                showStatus(`Awarded ${challenge.points} points to ${team.name} for "${challenge.name}"!`, 'success');
             }
-        }
-        
-        async function approveSubmission(submissionId) {
-            const submission = pendingSubmissions.find(s => s.id === submissionId);
-            if (!submission) return;
-            
-            const team = teams.find(t => t.name === submission.teamName);
-            if (team) {
-                team.score += submission.points;
-            }
-            
-            pendingSubmissions = pendingSubmissions.filter(s => s.id !== submissionId);
-            
-            if (await saveData()) {
-                updateAllDisplays();
-                closeModal();
-            }
-        }
-        
-        async function rejectSubmission(submissionId) {
-            const submission = pendingSubmissions.find(s => s.id === submissionId);
-            if (!submission) return;
-            
-            const reason = prompt('Reason for rejection (optional):');
-            
-            pendingSubmissions = pendingSubmissions.filter(s => s.id !== submissionId);
-            
-            if (await saveData()) {
-                updateAllDisplays();
-                closeModal();
-                showStatus(`Rejected submission from ${submission.teamName}${reason ? ': ' + reason : ''}`, 'success');
-            }
-        }
-        
-        function openModal(submissionId) {
-            const submission = pendingSubmissions.find(s => s.id === submissionId);
-            if (!submission) return;
-            
-            document.getElementById('modal-title').textContent = 
-                `${submission.teamName} - ${submission.challengeName}`;
-            
-            const modalImage = document.getElementById('modal-image');
-            if (submission.photoUrl) {
-                modalImage.src = submission.photoUrl;
-                modalImage.style.display = 'block';
-            } else {
-                modalImage.style.display = 'none';
-            }
-            
-            document.getElementById('modal-details').innerHTML = `
-                <p><strong>Points:</strong> ${submission.points}</p>
-                <p><strong>Submitted:</strong> ${new Date(submission.timestamp).toLocaleString()}</p>
-                <p><strong>Description:</strong> ${submission.description}</p>
-                ${!submission.photoUrl ? '<p><em>This is a text-based submission with no photo.</em></p>' : ''}
-            `;
-            document.getElementById('photo-modal').style.display = 'block';
-        }
-        
-        function closeModal() {
-            document.getElementById('photo-modal').style.display = 'none';
-        }
-        
-        async function refreshData() {
-            await loadData();
         }
         
         function exportData() {
             const dataToExport = {
                 teams,
                 challenges,
-                pendingSubmissions,
                 exportDate: new Date().toISOString()
             };
             
@@ -1086,39 +750,39 @@
             showStatus('Data exported successfully!', 'success');
         }
         
+        async function refreshData() {
+            await loadData();
+        }
+        
         // Import functionality
-        document.getElementById('import-file').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            try {
-                const text = await file.text();
-                const importedData = JSON.parse(text);
-                
-                if (importedData.teams && importedData.challenges) {
-                    teams = importedData.teams;
-                    challenges = importedData.challenges;
-                    pendingSubmissions = importedData.pendingSubmissions || [];
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('import-file');
+            if (fileInput) {
+                fileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
                     
-                    if (await saveData()) {
-                        updateAllDisplays();
-                        showStatus('Data imported successfully!', 'success');
+                    try {
+                        const text = await file.text();
+                        const importedData = JSON.parse(text);
+                        
+                        if (importedData.teams && importedData.challenges) {
+                            teams = importedData.teams;
+                            challenges = importedData.challenges;
+                            
+                            if (await saveData()) {
+                                updateAllDisplays();
+                                showStatus('Data imported successfully!', 'success');
+                            }
+                        } else {
+                            showStatus('Invalid file format', 'error');
+                        }
+                    } catch (error) {
+                        showStatus('Error importing file', 'error');
                     }
-                } else {
-                    showStatus('Invalid file format', 'error');
-                }
-            } catch (error) {
-                showStatus('Error importing file', 'error');
+                });
             }
         });
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('photo-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
         
         // Initialize
         initEmojiGrid();

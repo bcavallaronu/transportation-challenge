@@ -359,12 +359,66 @@
     <script>
         // Configuration - Replace with your JSONBin.io bin ID
         const API_CONFIG = {
-            binId: '688d10247b4b8670d8ab29a9', // Replace this with your actual bin ID
+            binId: '688d10247b4b8670d8ab29a9',
             baseUrl: 'https://api.jsonbin.io/v3/b/'
         };
         
         let teams = [];
         let challenges = [];
+        
+        // Calculate achievement badges for a team
+        function getTeamBadges(teamName) {
+            const badges = [];
+            const categories = [...new Set(challenges.map(c => c.category))];
+            
+            // For demo purposes, randomly assign some badges based on team score
+            const team = teams.find(t => t.name === teamName);
+            if (!team) return badges;
+            
+            if (team.score >= 20) badges.push('🚶‍♀️ Walker');
+            if (team.score >= 40) badges.push('🚌 Transit Pro');
+            if (team.score >= 60) badges.push('🚲 Cyclist');
+            if (team.score >= 80) badges.push('🌱 Eco Champion');
+            if (team.score >= 100) badges.push('⭐ Superstar');
+            
+            return badges;
+        }
+        
+        // Calculate progress to next rank
+        function getProgressToNextRank(currentScore, currentRank, totalTeams) {
+            if (currentRank === 1) {
+                return { progress: 100, text: 'Leading!' };
+            }
+            
+            const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+            const nextTeamScore = sortedTeams[currentRank - 2].score;
+            const pointsNeeded = Math.max(1, nextTeamScore - currentScore + 1);
+            const progress = Math.max(0, Math.min(100, ((nextTeamScore - pointsNeeded + 1) / nextTeamScore) * 100));
+            
+            return {
+                progress: progress,
+                text: `${pointsNeeded} pts to rank #${currentRank - 1}`
+            };
+        }
+        
+        // Generate avatar for team
+        function getTeamAvatar(teamName, avatarUrl = null) {
+            if (avatarUrl) {
+                // Check if it's an emoji (single character) or image URL
+                if (avatarUrl.length <= 4) { // Emoji
+                    return `<div class="team-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">${avatarUrl}</div>`;
+                } else { // Image URL
+                    return `<img src="${avatarUrl}" alt="${teamName}" class="team-avatar">`;
+                }
+            } else {
+                // Generate initials from team name
+                const initials = teamName.split(' ')
+                    .map(word => word.charAt(0).toUpperCase())
+                    .join('')
+                    .substring(0, 2);
+                return `<div class="team-avatar">${initials}</div>`;
+            }
+        }
         
         async function loadData() {
             try {
@@ -431,13 +485,34 @@
                     trophy = '🥉';
                 }
                 
+                const badges = getTeamBadges(team.name);
+                const progress = getProgressToNextRank(team.score, index + 1, teams.length);
+                const avatar = getTeamAvatar(team.name, team.avatar);
+                
                 teamRow.className = `team-row ${rankClass}`;
                 teamRow.innerHTML = `
                     <div class="rank">#${index + 1}</div>
-                    <div class="team-name">${team.name}</div>
+                    ${avatar}
+                    <div class="team-info">
+                        <div class="team-name">${team.name}</div>
+                        <div class="team-badges">
+                            ${badges.map(badge => `<span class="badge">${badge}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-label">${progress.text}</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${Math.round(progress.progress)}% complete</div>
+                    </div>
                     <div class="score">${team.score} pts</div>
                     <div class="trophy">${trophy}</div>
                 `;
+                
+                // Add staggered animation delay
+                teamRow.style.animationDelay = `${index * 0.1}s`;
+                
                 leaderboardContent.appendChild(teamRow);
             });
         }
