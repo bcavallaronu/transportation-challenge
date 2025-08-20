@@ -15,85 +15,114 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
+            overflow-x: hidden;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1800px;
             margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .header {
             text-align: center;
             color: white;
             margin-bottom: 40px;
+            flex-shrink: 0;
         }
         
         .header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 4em;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            font-weight: 700;
         }
         
         .header p {
-            font-size: 1.3em;
-            opacity: 0.9;
+            font-size: 1.8em;
+            opacity: 0.95;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .loading {
             text-align: center;
             color: white;
-            font-size: 1.2em;
-            padding: 40px;
+            font-size: 2em;
+            padding: 60px;
         }
         
         .error {
-            background: rgba(220, 53, 69, 0.2);
-            border: 2px solid #dc3545;
+            background: rgba(220, 53, 69, 0.3);
+            border: 3px solid #dc3545;
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             text-align: center;
+            font-size: 1.4em;
         }
         
         .event-info {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 40px;
             color: white;
             text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .event-info h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .event-info p {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+        
+        /* Main content area - side by side layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 40px;
+            flex: 1;
+            min-height: 0;
         }
         
         .leaderboard {
             background: white;
             color: #333;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            overflow-y: auto;
         }
         
         .leaderboard h2 {
             text-align: center;
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2.2em;
+            margin-bottom: 35px;
+            font-size: 3em;
+            font-weight: 700;
         }
         
         .team-row {
             display: flex;
             align-items: center;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 20px;
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
-            animation: slideInUp 0.6s ease forwards;
+            animation: slideInUp 0.8s ease forwards;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
         }
         
         .team-row:nth-child(1) { animation-delay: 0.1s; }
@@ -111,51 +140,51 @@
         }
         
         .team-row:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
         }
         
         .team-row.first { 
             background: linear-gradient(135deg, #ffd700, #ffed4e);
-            border: 3px solid #ffaa00;
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            border: 4px solid #ffaa00;
+            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
         }
         .team-row.second { 
             background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
-            border: 3px solid #999;
-            box-shadow: 0 8px 25px rgba(192, 192, 192, 0.3);
+            border: 4px solid #999;
+            box-shadow: 0 12px 35px rgba(192, 192, 192, 0.4);
         }
         .team-row.third { 
             background: linear-gradient(135deg, #cd7f32, #daa520);
-            border: 3px solid #b8860b;
-            box-shadow: 0 8px 25px rgba(205, 127, 50, 0.3);
+            border: 4px solid #b8860b;
+            box-shadow: 0 12px 35px rgba(205, 127, 50, 0.4);
         }
         .team-row.other { 
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 3px solid #dee2e6;
+            border: 4px solid #dee2e6;
             color: #333;
         }
         
         .rank {
-            font-size: 2em;
-            font-weight: bold;
-            margin-right: 20px;
-            min-width: 60px;
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-right: 25px;
+            min-width: 80px;
             text-align: center;
         }
         
         .team-avatar {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            margin-right: 15px;
+            margin-right: 20px;
             object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.5);
+            border: 4px solid rgba(255,255,255,0.6);
             background: linear-gradient(135deg, #667eea, #764ba2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8em;
+            font-size: 2.2em;
             font-weight: bold;
             color: white;
             flex-shrink: 0;
@@ -166,132 +195,150 @@
         }
         
         .team-name {
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
         
         .team-badges {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         
         .badge {
             background: rgba(102, 126, 234, 0.2);
             color: #667eea;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 1em;
             font-weight: 600;
         }
         
         .progress-section {
-            margin-left: 20px;
-            min-width: 150px;
+            margin-left: 25px;
+            min-width: 200px;
         }
         
         .progress-label {
-            font-size: 0.9em;
+            font-size: 1.1em;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
         
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 12px;
             background: rgba(0,0,0,0.1);
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: hidden;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 4px;
-            transition: width 0.8s ease;
-            animation: progressGlow 2s infinite alternate;
+            border-radius: 6px;
+            transition: width 1s ease;
+            animation: progressGlow 3s infinite alternate;
         }
         
         @keyframes progressGlow {
-            0% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
-            100% { box-shadow: 0 0 15px rgba(102, 126, 234, 0.8); }
+            0% { box-shadow: 0 0 8px rgba(102, 126, 234, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.9); }
         }
         
         .progress-text {
-            font-size: 0.8em;
+            font-size: 1em;
             color: #666;
+            font-weight: 600;
         }
         
         .score {
-            font-size: 1.6em;
-            font-weight: bold;
+            font-size: 2.2em;
+            font-weight: 800;
             color: #333;
-            margin-right: 15px;
+            margin-right: 20px;
         }
         
         .trophy {
-            font-size: 1.5em;
-            margin-left: 15px;
-            animation: bounce 2s infinite;
+            font-size: 2em;
+            margin-left: 20px;
+            animation: bounce 3s infinite;
         }
         
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+            40% { transform: translateY(-12px); }
+            60% { transform: translateY(-6px); }
         }
         
         .challenges-preview {
             background: white;
             color: #333;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            overflow-y: auto;
         }
         
         .challenges-preview h3 {
             text-align: center;
             color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
         }
         
         .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
         .challenge-item {
             background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border-left: 4px solid #667eea;
+            border: 3px solid #dee2e6;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 6px solid #667eea;
             transition: all 0.3s ease;
             color: #333;
         }
         
         .challenge-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateX(8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+        
+        .challenge-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
         
         .challenge-points {
-            font-weight: bold;
+            font-weight: 700;
             color: #667eea;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .challenge-category {
+            font-size: 1em;
+            color: #666;
+            font-weight: 600;
         }
         
         .last-updated {
             text-align: center;
             color: white;
-            opacity: 0.8;
-            font-size: 1.1em;
+            opacity: 0.9;
+            font-size: 1.3em;
+            margin-top: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            flex-shrink: 0;
         }
         
         .pulse {
@@ -299,257 +346,47 @@
         }
         
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% { opacity: 0.9; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.9; }
         }
         
-        /* Mobile responsiveness */
+        /* TV Optimization - 1080p */
+        @media (min-width: 1400px) {
+            .header h1 { font-size: 4.5em; }
+            .header p { font-size: 2em; }
+            .leaderboard h2 { font-size: 3.5em; }
+            .challenges-preview h3 { font-size: 3em; }
+            .team-name { font-size: 2.2em; }
+            .rank { font-size: 3.2em; min-width: 100px; }
+            .score { font-size: 2.5em; }
+            .team-avatar { width: 80px; height: 80px; font-size: 2.5em; }
+            .trophy { font-size: 2.5em; }
+        }
+        
+        /* Mobile responsiveness (for setup/testing) */
         @media (max-width: 768px) {
-            .header h1 { font-size: 2em; }
-            .team-row { padding: 15px; flex-wrap: wrap; }
-            .rank { font-size: 1.5em; margin-right: 10px; min-width: 40px; }
-            .team-name { font-size: 1.2em; }
-            .score { font-size: 1.3em; }
-            .progress-section { margin-left: 10px; min-width: 120px; }
+            body { padding: 15px; }
+            .container { height: auto; }
+            .main-content { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+            .header h1 { font-size: 2.5em; }
+            .header p { font-size: 1.1em; }
+            .leaderboard h2 { font-size: 2em; }
+            .challenges-preview h3 { font-size: 1.8em; }
+            .team-row { padding: 15px; }
+            .rank { font-size: 1.8em; margin-right: 15px; min-width: 50px; }
+            .team-name { font-size: 1.3em; }
+            .score { font-size: 1.5em; }
             .team-avatar { 
-                width: 40px; 
-                height: 40px; 
-                font-size: 1.5em;
-                margin-right: 10px;
+                width: 45px; 
+                height: 45px; 
+                font-size: 1.4em;
+                margin-right: 12px;
             }
+            .progress-section { margin-left: 10px; min-width: 100px; }
+            .challenge-grid { gap: 15px; }
+            .challenge-item { padding: 15px; }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🚲 Alternative Transportation Challenge</h1>
-            <p>Live Leaderboard</p>
-        </div>
-        
-        <div id="loading" class="loading">
-            Loading current standings...
-        </div>
-        
-        <div id="error-message" class="error" style="display: none;">
-            <h3>Unable to load data</h3>
-            <p>Please check your internet connection or contact the event organizers.</p>
-        </div>
-        
-        <div id="content" style="display: none;">
-            <div class="event-info">
-                <h3>Week-Long Competition in Progress</h3>
-                <p>Complete challenges using sustainable transportation methods to earn points!</p>
-            </div>
-            
-            <div class="leaderboard">
-                <h2>🏆 Current Standings</h2>
-                <div id="leaderboard-content">
-                    <!-- Teams will be populated here -->
-                </div>
-            </div>
-            
-            <div class="challenges-preview">
-                <h3>📋 Available Challenges</h3>
-                <div class="challenge-grid" id="challenges-grid">
-                    <!-- Challenges will be populated here -->
-                </div>
-            </div>
-        </div>
-        
-        <div id="last-updated" class="last-updated pulse" style="display: none;">
-            Last Updated: <span id="last-updated-time"></span>
-        </div>
-    </div>
-
-    <script>
-        // Configuration - Replace with your JSONBin.io bin ID
-        const API_CONFIG = {
-            binId: '688d10247b4b8670d8ab29a9',
-            baseUrl: 'https://api.jsonbin.io/v3/b/'
-        };
-        
-        let teams = [];
-        let challenges = [];
-        
-        // Calculate achievement badges for a team
-        function getTeamBadges(teamName) {
-            const badges = [];
-            const categories = [...new Set(challenges.map(c => c.category))];
-            
-            // For demo purposes, randomly assign some badges based on team score
-            const team = teams.find(t => t.name === teamName);
-            if (!team) return badges;
-            
-            if (team.score >= 20) badges.push('🚶‍♀️ Walker');
-            if (team.score >= 40) badges.push('🚌 Transit Pro');
-            if (team.score >= 60) badges.push('🚲 Cyclist');
-            if (team.score >= 80) badges.push('🌱 Eco Champion');
-            if (team.score >= 100) badges.push('⭐ Superstar');
-            
-            return badges;
-        }
-        
-        // Calculate progress to next rank
-        function getProgressToNextRank(currentScore, currentRank, totalTeams) {
-            if (currentRank === 1) {
-                return { progress: 100, text: 'Leading!' };
-            }
-            
-            const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
-            const nextTeamScore = sortedTeams[currentRank - 2].score;
-            const pointsNeeded = Math.max(1, nextTeamScore - currentScore + 1);
-            const progress = Math.max(0, Math.min(100, ((nextTeamScore - pointsNeeded + 1) / nextTeamScore) * 100));
-            
-            return {
-                progress: progress,
-                text: `${pointsNeeded} pts to rank #${currentRank - 1}`
-            };
-        }
-        
-        // Generate avatar for team
-        function getTeamAvatar(teamName, avatarUrl = null) {
-            if (avatarUrl) {
-                // Check if it's an emoji (single character) or image URL
-                if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="team-avatar">${avatarUrl}</div>`;
-                } else { // Image URL
-                    return `<img src="${avatarUrl}" alt="${teamName}" class="team-avatar">`;
-                }
-            } else {
-                // Generate initials from team name
-                const initials = teamName.split(' ')
-                    .map(word => word.charAt(0).toUpperCase())
-                    .join('')
-                    .substring(0, 2);
-                return `<div class="team-avatar">${initials}</div>`;
-            }
-        }
-        
-        async function loadData() {
-            try {
-                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                
-                const data = await response.json();
-                teams = data.record.teams || [];
-                challenges = data.record.challenges || [];
-                
-                updateDisplay();
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showError();
-            }
-        }
-        
-        function updateDisplay() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-message').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-            document.getElementById('last-updated').style.display = 'block';
-            
-            updateLeaderboard();
-            updateChallengesGrid();
-            updateLastUpdated();
-        }
-        
-        function showError() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-message').style.display = 'block';
-            document.getElementById('content').style.display = 'none';
-            document.getElementById('last-updated').style.display = 'none';
-        }
-        
-        function updateLeaderboard() {
-            teams.sort((a, b) => b.score - a.score);
-            
-            const leaderboardContent = document.getElementById('leaderboard-content');
-            leaderboardContent.innerHTML = '';
-            
-            if (teams.length === 0) {
-                leaderboardContent.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No teams registered yet</p>';
-                return;
-            }
-            
-            teams.forEach((team, index) => {
-                const teamRow = document.createElement('div');
-                let rankClass = 'other';
-                let trophy = '';
-                
-                if (index === 0) {
-                    rankClass = 'first';
-                    trophy = '🥇';
-                } else if (index === 1) {
-                    rankClass = 'second';
-                    trophy = '🥈';
-                } else if (index === 2) {
-                    rankClass = 'third';
-                    trophy = '🥉';
-                }
-                
-                const badges = getTeamBadges(team.name);
-                const progress = getProgressToNextRank(team.score, index + 1, teams.length);
-                const avatar = getTeamAvatar(team.name, team.avatar);
-                
-                teamRow.className = `team-row ${rankClass}`;
-                teamRow.innerHTML = `
-                    <div class="rank">#${index + 1}</div>
-                    ${avatar}
-                    <div class="team-info">
-                        <div class="team-name">${team.name}</div>
-                        <div class="team-badges">
-                            ${badges.map(badge => `<span class="badge">${badge}</span>`).join('')}
-                        </div>
-                    </div>
-                    <div class="progress-section">
-                        <div class="progress-label">${progress.text}</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${progress.progress}%"></div>
-                        </div>
-                        <div class="progress-text">${Math.round(progress.progress)}% complete</div>
-                    </div>
-                    <div class="score">${team.score} pts</div>
-                    <div class="trophy">${trophy}</div>
-                `;
-                
-                // Add staggered animation delay
-                teamRow.style.animationDelay = `${index * 0.1}s`;
-                
-                leaderboardContent.appendChild(teamRow);
-            });
-        }
-        
-        function updateChallengesGrid() {
-            const challengesGrid = document.getElementById('challenges-grid');
-            challengesGrid.innerHTML = '';
-            
-            challenges.forEach(challenge => {
-                const challengeItem = document.createElement('div');
-                challengeItem.className = 'challenge-item';
-                challengeItem.innerHTML = `
-                    <div style="margin-bottom: 8px; font-weight: 600;">${challenge.name}</div>
-                    <div class="challenge-points">${challenge.points} points</div>
-                    <div style="font-size: 0.9em; color: #666; margin-top: 5px;">Category: ${challenge.category}</div>
-                `;
-                challengesGrid.appendChild(challengeItem);
-            });
-        }
-        
-        function updateLastUpdated() {
-            const now = new Date();
-            document.getElementById('last-updated-time').textContent = now.toLocaleString();
-        }
-        
-        // Initialize the leaderboard
-        loadData();
-        
-        // Auto-refresh every 30 seconds
-        setInterval(loadData, 30000);
-    </script>
-</body>
-</html>
