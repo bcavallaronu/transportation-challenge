@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative Transportation Challenge - Join Now!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: slideInUp 0.8s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .event-dates {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .description {
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            text-align: left;
+        }
+        
+        .highlights {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 35px;
+            border-left: 6px solid #667eea;
+        }
+        
+        .highlights h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .highlights ul {
+            color: #333;
+            font-size: 1.1em;
+            text-align: left;
+            list-style: none;
+            padding: 0;
+        }
+        
+        .highlights li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .highlights li::before {
+            content: "🚲";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .cta-section {
+            margin-bottom: 20px;
+        }
+        
+        .signup-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .signup-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .signup-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .additional-info {
+            color: #333;
+            font-size: 1em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .prizes-section {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .prizes-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .prize-icon {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .main-card {
+                padding: 30px 25px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .event-dates {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            
+            .description {
+                font-size: 1.1em;
+            }
+            
+            .signup-button {
+                padding: 15px 30px;
+                font-size: 1.2em;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 800px;
+            }
+            
+            .main-card {
+                padding: 50px;
+            }
+            
+            .header h1 {
+                font-size: 3em;
+            }
+            
+            .description {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-card">
+            <div class="header">
+                <h1>🚲 Alternative Transportation Challenge</h1>
+            </div>
+            
+            <div class="event-dates">
+                📅 September 22-26, 2025
+            </div>
+            
+            <div class="description">
+                Alternative transportation week is from 9/22-9/26 and is a chance to try out new modes of transportation and to complete alternative transportation challenges for a chance to win fun prizes!
+            </div>
+            
+            <div class="prizes-section">
+                <div class="prize-icon">🏆</div>
+                <h3>Win Fun Prizes!</h3>
+                <p>Complete challenges and climb the leaderboard to earn exciting rewards</p>
+            </div>
+            
+            <div class="highlights">
+                <h3>What You Can Do</h3>
+                <ul>
+                    <li>Take the bus or train to work/school</li>
+                    <li>Walk or bike to local businesses</li>
+                    <li>Try carpooling or ridesharing</li>
+                    <li>Use scooters or other eco-friendly transport</li>
+                    <li>Complete daily step challenges</li>
+                    <li>Earn bonus points for creative solutions</li>
+                </ul>
+            </div>
+            
+            <div class="cta-section">
+                <a href="https://docs.google.com/forms/d/1NfHmeSWxsGMxPiWkP-P1Oz5Ejn27ulFjmCjBB0-qamg/edit" 
+                   class="signup-button" 
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    🚀 Sign Up Now!
+                </a>
+                
+                <div class="additional-info">
+                    Join teams, track your progress, and compete for prizes!
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🌱 Let's make transportation more sustainable together!</p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive elements for better user experience
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click tracking for the signup button
+            const signupButton = document.querySelector('.signup-button');
+            
+            signupButton.addEventListener('click', function() {
+                console.log('User clicked sign-up button');
+                
+                // Optional: Add analytics tracking here
+                // gtag('event', 'click', { 'event_category': 'signup', 'event_label': 'transportation_challenge' });
+            });
+            
+            // Add some visual feedback when the page loads
+            setTimeout(() => {
+                document.querySelector('.main-card').style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    document.querySelector('.main-card').style.transform = 'scale(1)';
+                }, 200);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
