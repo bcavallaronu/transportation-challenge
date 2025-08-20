@@ -63,6 +63,10 @@
             margin-bottom: 30px;
         }
         
+        .dashboard:last-child {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        
         .panel {
             background: white;
             color: #333;
@@ -199,9 +203,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8em;
+            font-size: 1em;
             font-weight: bold;
             color: white;
+            flex-shrink: 0;
         }
         
         .challenge-list {
@@ -291,7 +296,7 @@
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .dashboard {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
             
             .header h1 {
@@ -372,6 +377,30 @@
             
             <div class="dashboard">
                 <div class="panel">
+                    <h2>➕ Award Bonus Points</h2>
+                    <div class="admin-section">
+                        <select id="bonus-team-select">
+                            <option value="">Select Team</option>
+                        </select>
+                        <input type="number" id="bonus-points" placeholder="Points (e.g., 1 for photo)" min="1" max="10">
+                        <input type="text" id="bonus-reason" placeholder="Reason (e.g., Photo bonus)" maxlength="50">
+                        <button onclick="awardBonusPoints()" id="award-bonus-btn">Award Bonus Points</button>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2>🔄 Batch Sync</h2>
+                    <div class="admin-section">
+                        <div id="pending-changes" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                            <strong>Pending Changes: <span id="change-count">0</span></strong>
+                            <div id="change-list" style="font-size: 0.9em; margin-top: 5px; color: #856404;"></div>
+                        </div>
+                        <button onclick="syncToJSONBin()" id="sync-btn">💾 Sync All Changes</button>
+                        <button onclick="clearLocalChanges()" id="clear-btn" style="background: #6c757d;">🗑️ Clear Local Changes</button>
+                    </div>
+                </div>
+                
+                <div class="panel">
                     <h2>🏆 Current Standings</h2>
                     <div class="leaderboard-preview" id="leaderboard-preview">
                         <!-- Leaderboard preview will be populated here -->
@@ -409,14 +438,47 @@
         let teams = [];
         let challenges = [];
         let selectedEmoji = null;
+        let pendingChanges = [];
         
-        // Available emoji options for team avatars
+        // Track changes locally before syncing
+        function addPendingChange(type, description, data) {
+            pendingChanges.push({
+                id: Date.now(),
+                type: type,
+                description: description,
+                data: data,
+                timestamp: new Date().toLocaleString()
+            });
+            updatePendingChangesDisplay();
+        }
+        
+        function updatePendingChangesDisplay() {
+            const countEl = document.getElementById('change-count');
+            const listEl = document.getElementById('change-list');
+            
+            countEl.textContent = pendingChanges.length;
+            
+            if (pendingChanges.length === 0) {
+                listEl.innerHTML = 'No pending changes';
+            } else {
+                listEl.innerHTML = pendingChanges.slice(-3).map(change => 
+                    `• ${change.description}`
+                ).join('<br>');
+                
+                if (pendingChanges.length > 3) {
+                    listEl.innerHTML += `<br>• ... and ${pendingChanges.length - 3} more`;
+                }
+            }
+        }
+        
+        // Available emoji options for team avatars (eco-friendly focus)
         const emojiOptions = [
             '🚲', '🚌', '🚶‍♀️', '🚶‍♂️', '🚗', '🛴', 
-            '🚊', '🚉', '🚇', '🚃', '🚅', '✈️',
+            '🚊', '🚉', '🚇', '🚃', '🚅', '🚴‍♀️',
             '🌱', '🌿', '🌍', '♻️', '🌳', '🍃',
             '⚡', '🔋', '☀️', '🌟', '💚', '🏃‍♀️',
-            '🏃‍♂️', '🚀', '⭐', '🏆', '🎯', '💪'
+            '🏃‍♂️', '🚴‍♂️', '⭐', '🏆', '🎯', '💪',
+            '🌲', '🌈', '🌾', '🍀'
         ];
         
         // Initialize emoji grid
@@ -452,7 +514,7 @@
             if (avatarUrl) {
                 // Check if it's an emoji (single character) or image URL
                 if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="${className}" style="background: linear-gradient(135deg, #007bff, #0056b3);">${avatarUrl}</div>`;
+                    return `<div class="${className}">${avatarUrl}</div>`;
                 } else { // Image URL
                     return `<img src="${avatarUrl}" alt="${teamName}" class="${className}">`;
                 }
@@ -624,7 +686,7 @@
         }
         
         function updateDropdowns() {
-            // Update team dropdown
+            // Update team dropdown for regular points
             const teamSelect = document.getElementById('demo-team-select');
             teamSelect.innerHTML = '<option value="">Select Team</option>';
             teams.forEach((team, index) => {
@@ -632,6 +694,16 @@
                 option.value = index;
                 option.textContent = team.name;
                 teamSelect.appendChild(option);
+            });
+            
+            // Update team dropdown for bonus points
+            const bonusTeamSelect = document.getElementById('bonus-team-select');
+            bonusTeamSelect.innerHTML = '<option value="">Select Team</option>';
+            teams.forEach((team, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = team.name;
+                bonusTeamSelect.appendChild(option);
             });
             
             // Update challenge dropdown
@@ -701,6 +773,7 @@
                 document.getElementById('new-challenge-points').value = '';
                 document.getElementById('new-challenge-category').value = '';
                 updateAllDisplays();
+                showStatus(`Added challenge: ${name}`, 'success');
             }
         }
         
@@ -716,15 +789,72 @@
             const team = teams[teamIndex];
             const challenge = challenges[challengeIndex];
             
-            // Award points directly to the team
+            // Award points locally
             team.score += challenge.points;
             
-            if (await saveData()) {
-                document.getElementById('demo-team-select').value = '';
-                document.getElementById('demo-challenge-select').value = '';
-                updateAllDisplays();
-                showStatus(`Awarded ${challenge.points} points to ${team.name} for "${challenge.name}"!`, 'success');
+            // Track change for batch sync
+            addPendingChange('award', `${team.name}: +${challenge.points} pts (${challenge.name})`, {
+                teamName: team.name,
+                points: challenge.points,
+                reason: challenge.name
+            });
+            
+            // Clear form and update displays
+            document.getElementById('demo-team-select').value = '';
+            document.getElementById('demo-challenge-select').value = '';
+            updateLeaderboardPreview();
+            showStatus(`+${challenge.points} points to ${team.name}! (Not synced yet)`, 'success');
+        }
+        
+        async function awardBonusPoints() {
+            const teamIndex = document.getElementById('bonus-team-select').value;
+            const bonusPoints = parseInt(document.getElementById('bonus-points').value);
+            const reason = document.getElementById('bonus-reason').value.trim();
+            
+            if (teamIndex === '' || !bonusPoints || !reason) {
+                showStatus('Please fill in all bonus point fields', 'error');
+                return;
             }
+            
+            const team = teams[teamIndex];
+            
+            // Award bonus points locally
+            team.score += bonusPoints;
+            
+            // Track change for batch sync
+            addPendingChange('bonus', `${team.name}: +${bonusPoints} pts (${reason})`, {
+                teamName: team.name,
+                points: bonusPoints,
+                reason: reason
+            });
+            
+            // Clear form and update displays
+            document.getElementById('bonus-team-select').value = '';
+            document.getElementById('bonus-points').value = '';
+            document.getElementById('bonus-reason').value = '';
+            updateLeaderboardPreview();
+            showStatus(`+${bonusPoints} bonus points to ${team.name}! (Not synced yet)`, 'success');
+        }
+        
+        async function syncToJSONBin() {
+            if (pendingChanges.length === 0) {
+                showStatus('No changes to sync', 'info');
+                return;
+            }
+            
+            if (await saveData()) {
+                pendingChanges = [];
+                updatePendingChangesDisplay();
+                showStatus(`Successfully synced all changes to JSONBin!`, 'success');
+            }
+        }
+        
+        function clearLocalChanges() {
+            // Reset teams to last saved state by reloading
+            loadData();
+            pendingChanges = [];
+            updatePendingChangesDisplay();
+            showStatus('Cleared local changes and reloaded from JSONBin', 'info');
         }
         
         function exportData() {
@@ -787,6 +917,7 @@
         // Initialize
         initEmojiGrid();
         loadData();
+        updatePendingChangesDisplay();
     </script>
 </body>
 </html>

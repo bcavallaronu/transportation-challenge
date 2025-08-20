@@ -155,9 +155,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: bold;
             color: white;
+            flex-shrink: 0;
         }
         
         .team-info {
@@ -311,6 +312,12 @@
             .team-name { font-size: 1.2em; }
             .score { font-size: 1.3em; }
             .progress-section { margin-left: 10px; min-width: 120px; }
+            .team-avatar { 
+                width: 40px; 
+                height: 40px; 
+                font-size: 1.5em;
+                margin-right: 10px;
+            }
         }
     </style>
 </head>
@@ -406,7 +413,7 @@
             if (avatarUrl) {
                 // Check if it's an emoji (single character) or image URL
                 if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="team-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">${avatarUrl}</div>`;
+                    return `<div class="team-avatar">${avatarUrl}</div>`;
                 } else { // Image URL
                     return `<img src="${avatarUrl}" alt="${teamName}" class="team-avatar">`;
                 }
