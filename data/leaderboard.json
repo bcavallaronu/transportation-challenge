@@ -1,11 +1,5 @@
 {
-  "teams": [
-    {
-      "name": "Super Walkers",
-      "score": 0,
-      "avatar": "🚶‍♀️"
-    }
-  ],
+  "teams": [],
   "challenges": [
     {
       "name": "Identify nearest bus stop",
