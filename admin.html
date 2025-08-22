@@ -361,7 +361,8 @@
             1. Go to GitHub Settings > Developer Settings > Personal Access Tokens<br>
             2. Create a new token with "repo" permissions<br>
             3. Paste the token below</p>
-            <input type="password" id="github-token" placeholder="GitHub Personal Access Token" style="margin-bottom: 15px;">
+            <input type="password" id="github-token" placeholder="GitHub Personal Access Token" 
+                   autocomplete="current-password" name="github-token" style="margin-bottom: 15px;">
             <button onclick="authenticateGitHub()" id="auth-btn">🔓 Authenticate</button>
         </div>
         
@@ -636,7 +637,7 @@
                     lastUpdated: new Date().toISOString()
                 };
                 
-                const content = btoa(JSON.stringify(dataToSave, null, 2));
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(dataToSave, null, 2))));
                 
                 const body = {
                     message: `Update leaderboard data - ${new Date().toLocaleString()}`,
