@@ -220,6 +220,7 @@
             box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
             border: none;
             cursor: pointer;
+            margin-bottom: 30px;
         }
         
         .leaderboard-button:hover {
@@ -231,6 +232,75 @@
         
         .leaderboard-button:active {
             transform: translateY(-1px);
+        }
+        
+        /* Challenges Section */
+        .challenges-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 6px solid #667eea;
+            text-align: left;
+        }
+        
+        .challenges-section h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .challenges-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .challenge-item {
+            background: white;
+            border: 2px solid #dee2e6;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .challenge-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .challenge-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .challenge-points {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .challenge-category {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 600;
+            padding: 5px 12px;
+            background: #e9ecef;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .challenges-loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
         }
         
         /* Mobile responsiveness */
@@ -260,6 +330,14 @@
                 padding: 15px 30px;
                 font-size: 1.2em;
             }
+            
+            .challenges-section {
+                padding: 20px;
+            }
+            
+            .challenge-item {
+                padding: 15px;
+            }
         }
         
         /* Large screen optimizations */
@@ -278,6 +356,12 @@
             
             .description {
                 font-size: 1.3em;
+            }
+            
+            .challenges-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
             }
         }
     </style>
@@ -343,6 +427,16 @@
                rel="noopener noreferrer">
                 📊 Leaderboard
             </a>
+            
+            <div class="challenges-section">
+                <h3>📋 All Available Challenges</h3>
+                <div id="challenges-loading" class="challenges-loading">
+                    Loading challenges...
+                </div>
+                <div class="challenges-grid" id="challenges-grid" style="display: none;">
+                    <!-- Challenges will be populated here -->
+                </div>
+            </div>
         </div>
         
         <div class="footer">
@@ -351,9 +445,84 @@
     </div>
 
     <script>
+        // Configuration - GitHub Pages setup
+        const API_CONFIG = {
+            owner: 'bcavallaronu', // Your GitHub username
+            repo: 'transportation-challenge', // Your repo name
+            filePath: 'data/leaderboard.json', // Path to data file in repo
+            rawUrl: 'https://raw.githubusercontent.com/bcavallaronu/transportation-challenge/main/data/leaderboard.json'
+        };
+        
+        let challenges = [];
+        
+        async function loadChallenges() {
+            try {
+                // Add cache-busting parameter to avoid stale data
+                const cacheBuster = Date.now();
+                const response = await fetch(`${API_CONFIG.rawUrl}?cb=${cacheBuster}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch challenges');
+                }
+                
+                const data = await response.json();
+                challenges = data.challenges || [];
+                
+                displayChallenges();
+                
+            } catch (error) {
+                console.error('Error loading challenges:', error);
+                showChallengesError();
+            }
+        }
+        
+        function displayChallenges() {
+            const loadingEl = document.getElementById('challenges-loading');
+            const gridEl = document.getElementById('challenges-grid');
+            
+            loadingEl.style.display = 'none';
+            gridEl.style.display = 'flex';
+            
+            if (challenges.length === 0) {
+                gridEl.innerHTML = '<p style="text-align: center; color: #666; padding: 20px; grid-column: 1 / -1;">No challenges available yet. Check back soon!</p>';
+                return;
+            }
+            
+            // Sort challenges by points (highest first) then by category
+            const sortedChallenges = [...challenges].sort((a, b) => {
+                if (b.points !== a.points) {
+                    return b.points - a.points;
+                }
+                return a.category.localeCompare(b.category);
+            });
+            
+            gridEl.innerHTML = '';
+            
+            sortedChallenges.forEach((challenge, index) => {
+                const challengeItem = document.createElement('div');
+                challengeItem.className = 'challenge-item';
+                challengeItem.style.animationDelay = `${index * 0.1}s`;
+                challengeItem.innerHTML = `
+                    <div class="challenge-name">${challenge.name}</div>
+                    <div class="challenge-points">${challenge.points} points</div>
+                    <div class="challenge-category">${challenge.category}</div>
+                `;
+                gridEl.appendChild(challengeItem);
+            });
+        }
+        
+        function showChallengesError() {
+            const loadingEl = document.getElementById('challenges-loading');
+            loadingEl.textContent = 'Unable to load challenges. Please try refreshing the page.';
+            loadingEl.style.color = '#dc3545';
+        }
+        
         // Add some interactive elements for better user experience
         document.addEventListener('DOMContentLoaded', function() {
-            // Add click tracking for both buttons
+            // Load challenges
+            loadChallenges();
+            
+            // Add click tracking for buttons
             const signupButton = document.querySelector('.signup-button');
             const submitButton = document.querySelector('.submit-button');
             
@@ -365,7 +534,7 @@
                 console.log('User clicked submit challenges button');
             });
             
-            // Add some visual feedback when the page loads
+            // Add visual feedback when the page loads
             setTimeout(() => {
                 document.querySelector('.main-card').style.transform = 'scale(1.02)';
                 setTimeout(() => {
