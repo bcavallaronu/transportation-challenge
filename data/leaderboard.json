@@ -1,11 +1,232 @@
 {
   "teams": [
     {
-      "name": "Test",
+      "name": "Super Walkers",
       "score": 0,
-      "avatar": "⭐"
+      "avatar": "🚶‍♀️"
     }
   ],
-  "challenges": [],
-  "lastUpdated": "2025-08-22T15:47:05.876Z"
+  "challenges": [
+    {
+      "name": "Identify nearest bus stop",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Take bus to work/school",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Walk 10,000 steps in a day",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Bike to a local business",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Use public transit for errands",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Carpool with colleague",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Try a new transit route",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Walk/bike for lunch",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Try out a new form of alternative transportation",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Use alternative transportation to meet a friend",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Join a group bike ride",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Use alternative transportation to go to a park",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Draw the alternative transportation of the future",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Write a poem about alternative transportation",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Use alternative transportation 5x in one week",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Use alternative transportation 2x in one week",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Make a 3 min video encouraging others to use alternative transportation",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Encourage a friend to use alternative transportation",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Help a friend take alternative transportation for the first time",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Use alternative transportation with a friend 2+ times in a week",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Make sure your bike is tuned-up",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Go on a walk with a friend",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Offer a ride to a colleague",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Try out an e-bike",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Attend the Alternative Transportation Celebration on 9/24",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "With chalk, write a note of encouragement to walkers on the sidewalk",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Research alternative modes of transportation in another city",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Take a walk around the neighborhood",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Take a cruise (skateboard, skates, scooter) around the neighborhood",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Read an article about alternative transportation",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Read a book about alternative transportation",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Join the Bicycle Coalition of Maine",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Go plogging",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Research Vision Zero",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Register for a race (and start practicing!)",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Share your views on alternative transportation with a friend",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Share your view on alternative transportation with an acquaintance",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Share your view on alternative transportation with a stranger",
+      "points": 15,
+      "category": "Difficult"
+    },
+    {
+      "name": "Include directions for using alternative transportation in your event materials",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Rent a bike",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Engage in a craftivist act related to transportation",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Carpool with friends post-work",
+      "points": 10,
+      "category": "Medium"
+    },
+    {
+      "name": "Identify bus routes to the new campus",
+      "points": 5,
+      "category": "Easy"
+    },
+    {
+      "name": "Other (choose your own adventure)",
+      "points": 5,
+      "category": "Easy"
+    }
+  ],
+  "lastUpdated": "2025-08-22T15:48:36.032Z"
 }
