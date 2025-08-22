@@ -114,6 +114,13 @@
             margin-bottom: 20px;
         }
         
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
         .signup-button {
             display: inline-block;
             background: linear-gradient(135deg, #28a745, #20c997);
@@ -137,6 +144,32 @@
         }
         
         .signup-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .submit-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .submit-button:active {
             transform: translateY(-1px);
         }
         
@@ -174,6 +207,32 @@
             margin: 10px 0;
         }
         
+        .leaderboard-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6f42c1, #563d7c);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .leaderboard-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(111, 66, 193, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+        
+        .leaderboard-button:active {
+            transform: translateY(-1px);
+        }
+        
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             body {
@@ -197,7 +256,7 @@
                 font-size: 1.1em;
             }
             
-            .signup-button {
+            .signup-button, .submit-button {
                 padding: 15px 30px;
                 font-size: 1.2em;
             }
@@ -257,17 +316,33 @@
             </div>
             
             <div class="cta-section">
-                <a href="https://docs.google.com/forms/d/1NfHmeSWxsGMxPiWkP-P1Oz5Ejn27ulFjmCjBB0-qamg/edit" 
-                   class="signup-button" 
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    🚀 Sign Up Now!
-                </a>
+                <div class="button-container">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeW_hgDFRbFUin-dUzvZniYr1jDVjIoHzxkpu3tnJhAyydaRA/viewform" 
+                       class="signup-button" 
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        📝 Sign Up for Challenge
+                    </a>
+                    
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSddp5KatE1vHTWqSx8wdinkKL457hzdG3seqgE_VZml4kLgqg/viewform?usp=header" 
+                       class="submit-button" 
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        🏃‍♀️ Submit Daily Challenges
+                    </a>
+                </div>
                 
                 <div class="additional-info">
-                    Join teams, track your progress, and compete for prizes!
+                    First time? Sign up above. Already registered? Submit your daily challenges!
                 </div>
             </div>
+            
+            <a href="https://bcavallaronu.github.io/transportation-challenge/" 
+               class="leaderboard-button" 
+               target="_blank"
+               rel="noopener noreferrer">
+                📊 Leaderboard
+            </a>
         </div>
         
         <div class="footer">
@@ -278,14 +353,16 @@
     <script>
         // Add some interactive elements for better user experience
         document.addEventListener('DOMContentLoaded', function() {
-            // Add click tracking for the signup button
+            // Add click tracking for both buttons
             const signupButton = document.querySelector('.signup-button');
+            const submitButton = document.querySelector('.submit-button');
             
             signupButton.addEventListener('click', function() {
                 console.log('User clicked sign-up button');
-                
-                // Optional: Add analytics tracking here
-                // gtag('event', 'click', { 'event_category': 'signup', 'event_label': 'transportation_challenge' });
+            });
+            
+            submitButton.addEventListener('click', function() {
+                console.log('User clicked submit challenges button');
             });
             
             // Add some visual feedback when the page loads
