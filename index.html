@@ -308,6 +308,8 @@
             border-radius: 25px;
             padding: 40px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            overflow: hidden;
+            position: relative;
         }
         
         .challenges-preview h3 {
@@ -316,12 +318,24 @@
             margin-bottom: 30px;
             font-size: 2.5em;
             font-weight: 700;
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding-top: 40px;
+            padding-bottom: 10px;
+            margin-top: -40px;
         }
         
         .challenge-grid {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            padding-top: 20px;
+        }
+        
+        /* Continuous scrolling animation for challenges */
+        .challenge-grid.auto-scroll {
+            animation: autoScrollChallenges 10s linear infinite;
         }
         
         .challenge-item {
@@ -332,6 +346,7 @@
             border-left: 6px solid #667eea;
             transition: all 0.3s ease;
             color: #333;
+            flex-shrink: 0;
         }
         
         .challenge-item:hover {
@@ -455,11 +470,6 @@
                 animation: autoScroll 30s linear infinite;
             }
             
-            /* Auto-scroll for challenges when there are too many */
-            #challenges-grid.auto-scroll {
-                animation: autoScrollChallenges 25s linear infinite;
-            }
-            
             /* Smaller progress sections for TV */
             .progress-section {
                 min-width: 180px;
@@ -479,11 +489,13 @@
             100% { transform: translateY(0); }
         }
         
-        /* Auto-scroll for challenges - slightly different timing */
+        /* Auto-scroll for challenges - 10 second cycle */
         @keyframes autoScrollChallenges {
-            0%, 20% { transform: translateY(0); }
-            40%, 60% { transform: translateY(-40%); }
-            80%, 100% { transform: translateY(-80%); }
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-25%); }
+            50% { transform: translateY(-50%); }
+            75% { transform: translateY(-75%); }
+            100% { transform: translateY(-100%); }
         }
         
         /* Mobile responsiveness (for setup/testing) */
@@ -588,10 +600,12 @@
     </div>
 
     <script>
-        // Configuration - Fixed with correct bin ID
+        // Configuration - GitHub Pages setup
         const API_CONFIG = {
-            binId: '688d10247b4b8670d8ab29a9', // Your actual bin ID
-            baseUrl: 'https://api.jsonbin.io/v3/b/'
+            owner: 'bcavallaronu', // Your GitHub username
+            repo: 'transportation-challenge', // Your repo name
+            filePath: 'data/leaderboard.json', // Path to data file in repo
+            rawUrl: 'https://raw.githubusercontent.com/bcavallaronu/transportation-challenge/main/data/leaderboard.json'
         };
         
         // QR Code Configuration - Update this with your desired URL
@@ -624,22 +638,25 @@
         }
         
         // Generate avatar for team - handles emoji avatars
-        function getTeamAvatar(teamName, avatarUrl = null) {
-            if (avatarUrl) {
-                // Check if it's an emoji (single character) or image URL
-                if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="team-avatar">${avatarUrl}</div>`;
-                } else { // Image URL
-                    return `<img src="${avatarUrl}" alt="${teamName}" class="team-avatar">`;
+        function getTeamAvatar(teamName, team) {
+            // Check for emoji in team.avatar or team.emoji fields
+            const emoji = team.avatar || team.emoji;
+            
+            if (emoji && emoji.trim()) {
+                // Check if it's an emoji (short string) or image URL
+                if (emoji.length <= 6 && !emoji.includes('http')) { // Emoji
+                    return `<div class="team-avatar">${emoji.trim()}</div>`;
+                } else if (emoji.includes('http')) { // Image URL
+                    return `<img src="${emoji}" alt="${teamName}" class="team-avatar">`;
                 }
-            } else {
-                // Generate initials from team name
-                const initials = teamName.split(' ')
-                    .map(word => word.charAt(0).toUpperCase())
-                    .join('')
-                    .substring(0, 2);
-                return `<div class="team-avatar">${initials}</div>`;
             }
+            
+            // Generate initials from team name as fallback
+            const initials = teamName.split(' ')
+                .map(word => word.charAt(0).toUpperCase())
+                .join('')
+                .substring(0, 2);
+            return `<div class="team-avatar">${initials}</div>`;
         }
         
         // Calculate achievement badges for a team
@@ -684,15 +701,17 @@
         
         async function loadData() {
             try {
-                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`);
+                // Add cache-busting parameter to avoid stale data
+                const cacheBuster = Date.now();
+                const response = await fetch(`${API_CONFIG.rawUrl}?cb=${cacheBuster}`);
                 
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }
                 
                 const data = await response.json();
-                teams = data.record.teams || [];
-                challenges = data.record.challenges || [];
+                teams = data.teams || [];
+                challenges = data.challenges || [];
                 
                 updateDisplay();
                 
@@ -754,14 +773,14 @@
                 
                 const badges = getTeamBadges(team);
                 const progress = getProgress(team.score);
-                const avatar = getTeamAvatar(team.name, team.avatar);
+                const avatar = getTeamAvatar(team.name, team);
                 
                 teamRow.className = `team-row ${rankClass}`;
                 teamRow.innerHTML = `
                     <div class="rank">#${index + 1}</div>
                     ${avatar}
                     <div class="team-info">
-                        <div class="team-name">${team.name} ${team.avatar || ''}</div>
+                        <div class="team-name">${team.name}</div>
                         <div class="team-badges">
                             ${badges.map(badge => `<span class="badge" title="${badge.name}">${badge.icon}</span>`).join('')}
                         </div>
@@ -796,20 +815,29 @@
                 return;
             }
             
-            const isLargeScreen = window.innerWidth >= 1400;
-            // More generous limit for TV - with tighter spacing, we can fit more
-            const maxChallengesVisible = isLargeScreen ? 15 : 10;
+            // Strategy: Show a curated subset for better readability
+            // Take top 4 highest-point challenges + 4 from different categories
+            const sortedByPoints = [...challenges].sort((a, b) => b.points - a.points);
+            const topChallenges = sortedByPoints.slice(0, 4);
             
-            // If we have fewer challenges than the max, show them all
-            const shouldLimitChallenges = challenges.length > maxChallengesVisible;
+            // Get diverse challenges from different categories
+            const categories = [...new Set(challenges.map(c => c.category))];
+            const diverseChallenges = [];
+            for (const category of categories) {
+                const categoryChallenge = challenges.find(c => 
+                    c.category === category && !topChallenges.includes(c)
+                );
+                if (categoryChallenge) {
+                    diverseChallenges.push(categoryChallenge);
+                }
+                if (diverseChallenges.length >= 4) break;
+            }
             
-            // Always sort challenges by points (highest first) for better display priority
-            const sortedChallenges = [...challenges].sort((a, b) => b.points - a.points);
-            const challengesToShow = shouldLimitChallenges ? 
-                sortedChallenges.slice(0, maxChallengesVisible) : 
-                sortedChallenges;
+            // Combine and limit to 8 total challenges for readability
+            const displayChallenges = [...topChallenges, ...diverseChallenges].slice(0, 8);
             
-            challengesToShow.forEach((challenge, index) => {
+            // Create challenge items
+            displayChallenges.forEach((challenge, index) => {
                 const challengeItem = document.createElement('div');
                 challengeItem.className = 'challenge-item';
                 challengeItem.innerHTML = `
@@ -820,22 +848,24 @@
                 challengesGrid.appendChild(challengeItem);
             });
             
-            // Only add "more challenges" indicator if we actually limited them
-            if (shouldLimitChallenges) {
+            // Add "more available" indicator if we have additional challenges
+            if (challenges.length > displayChallenges.length) {
                 const moreItem = document.createElement('div');
                 moreItem.className = 'challenge-item';
                 moreItem.style.opacity = '0.7';
                 moreItem.style.fontStyle = 'italic';
                 moreItem.innerHTML = `
-                    <div class="challenge-name">+ ${challenges.length - maxChallengesVisible} more challenges available</div>
+                    <div class="challenge-name">+ ${challenges.length - displayChallenges.length} more challenges</div>
                     <div class="challenge-points">Various points</div>
-                    <div class="challenge-category">See admin for full list</div>
+                    <div class="challenge-category">Scan QR code for full list</div>
                 `;
                 challengesGrid.appendChild(moreItem);
             }
             
-            // Debug info for testing
-            console.log(`Challenges: ${challenges.length} total, showing ${challengesToShow.length}, isLargeScreen: ${isLargeScreen}, limited: ${shouldLimitChallenges}`);
+            // Apply slower scrolling for better readability
+            challengesGrid.classList.add('auto-scroll');
+            
+            console.log(`Challenges: ${challenges.length} total, showing ${displayChallenges.length} curated challenges`);
         }
         
         function updateLastUpdated() {

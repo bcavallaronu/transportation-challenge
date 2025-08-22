@@ -56,6 +56,28 @@
             text-align: center;
         }
         
+        .auth-panel {
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .auth-panel h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .auth-panel p {
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -329,7 +351,18 @@
         
         <div id="error-message" class="error" style="display: none;">
             <h3>Unable to load data</h3>
-            <p>Please check your API configuration and internet connection.</p>
+            <p>Please check your configuration and internet connection.</p>
+        </div>
+        
+        <div id="auth-panel" class="auth-panel" style="display: none;">
+            <h2>🔐 GitHub Authentication Required</h2>
+            <p>To use the admin panel, you need a GitHub Personal Access Token with repository write permissions.</p>
+            <p><strong>How to create a token:</strong><br>
+            1. Go to GitHub Settings > Developer Settings > Personal Access Tokens<br>
+            2. Create a new token with "repo" permissions<br>
+            3. Paste the token below</p>
+            <input type="password" id="github-token" placeholder="GitHub Personal Access Token" style="margin-bottom: 15px;">
+            <button onclick="authenticateGitHub()" id="auth-btn">🔓 Authenticate</button>
         </div>
         
         <div id="content" style="display: none;">
@@ -389,18 +422,6 @@
                 </div>
                 
                 <div class="panel">
-                    <h2>🔄 Batch Sync</h2>
-                    <div class="admin-section">
-                        <div id="pending-changes" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
-                            <strong>Pending Changes: <span id="change-count">0</span></strong>
-                            <div id="change-list" style="font-size: 0.9em; margin-top: 5px; color: #856404;"></div>
-                        </div>
-                        <button onclick="syncToJSONBin()" id="sync-btn">💾 Sync All Changes</button>
-                        <button onclick="clearLocalChanges()" id="clear-btn" style="background: #6c757d;">🗑️ Clear Local Changes</button>
-                    </div>
-                </div>
-                
-                <div class="panel">
                     <h2>🏆 Current Standings</h2>
                     <div class="leaderboard-preview" id="leaderboard-preview">
                         <!-- Leaderboard preview will be populated here -->
@@ -428,48 +449,20 @@
     </div>
 
     <script>
-        // Configuration - Replace with your JSONBin.io bin ID and API key
+        // Configuration - GitHub Pages setup
         const API_CONFIG = {
-            binId: '688d10247b4b8670d8ab29a9', // Your actual bin ID
-            apiKey: '$2a$10$ltG7teCPt//ubzYCXRXGKe90iwc/iq3/TlDcugLSY8g82hWo7kwSW', // Your actual API key
-            baseUrl: 'https://api.jsonbin.io/v3/b/'
+            owner: 'bcavallaronu', // Your GitHub username
+            repo: 'transportation-challenge', // Your repo name
+            filePath: 'data/leaderboard.json', // Path to data file in repo
+            rawUrl: 'https://raw.githubusercontent.com/bcavallaronu/transportation-challenge/main/data/leaderboard.json',
+            branch: 'main' // or 'master' depending on your default branch
         };
         
         let teams = [];
         let challenges = [];
         let selectedEmoji = null;
-        let pendingChanges = [];
-        
-        // Track changes locally before syncing
-        function addPendingChange(type, description, data) {
-            pendingChanges.push({
-                id: Date.now(),
-                type: type,
-                description: description,
-                data: data,
-                timestamp: new Date().toLocaleString()
-            });
-            updatePendingChangesDisplay();
-        }
-        
-        function updatePendingChangesDisplay() {
-            const countEl = document.getElementById('change-count');
-            const listEl = document.getElementById('change-list');
-            
-            countEl.textContent = pendingChanges.length;
-            
-            if (pendingChanges.length === 0) {
-                listEl.innerHTML = 'No pending changes';
-            } else {
-                listEl.innerHTML = pendingChanges.slice(-3).map(change => 
-                    `• ${change.description}`
-                ).join('<br>');
-                
-                if (pendingChanges.length > 3) {
-                    listEl.innerHTML += `<br>• ... and ${pendingChanges.length - 3} more`;
-                }
-            }
-        }
+        let githubToken = null;
+        let fileSha = null; // Needed for GitHub API updates
         
         // Available emoji options for team avatars (eco-friendly focus)
         const emojiOptions = [
@@ -478,7 +471,7 @@
             '🌱', '🌿', '🌍', '♻️', '🌳', '🍃',
             '⚡', '🔋', '☀️', '🌟', '💚', '🏃‍♀️',
             '🏃‍♂️', '🚴‍♂️', '⭐', '🏆', '🎯', '💪',
-            '🌲', '🌈', '🌾', '🍀'
+            '🌲', '🌈', '🌾', '🤝'
         ];
         
         // Initialize emoji grid
@@ -507,28 +500,31 @@
             selectedEmoji = emoji;
         }
         
-        // Generate avatar for team - updated to handle emoji avatars
-        function getTeamAvatar(teamName, avatarUrl = null, small = false) {
+        // Generate avatar for team - handles emoji avatars
+        function getTeamAvatar(teamName, team, small = false) {
             const className = small ? 'team-avatar-small' : 'team-avatar';
             
-            if (avatarUrl) {
-                // Check if it's an emoji (single character) or image URL
-                if (avatarUrl.length <= 4) { // Emoji
-                    return `<div class="${className}">${avatarUrl}</div>`;
-                } else { // Image URL
-                    return `<img src="${avatarUrl}" alt="${teamName}" class="${className}">`;
+            // Check for emoji in team.avatar or team.emoji fields
+            const emoji = team.avatar || team.emoji;
+            
+            if (emoji && emoji.trim()) {
+                // Check if it's an emoji (short string) or image URL
+                if (emoji.length <= 6 && !emoji.includes('http')) { // Emoji
+                    return `<div class="${className}">${emoji.trim()}</div>`;
+                } else if (emoji.includes('http')) { // Image URL
+                    return `<img src="${emoji}" alt="${teamName}" class="${className}">`;
                 }
-            } else {
-                // Generate initials from team name
-                const initials = teamName.split(' ')
-                    .map(word => word.charAt(0).toUpperCase())
-                    .join('')
-                    .substring(0, 2);
-                return `<div class="${className}">${initials}</div>`;
             }
+            
+            // Generate initials from team name as fallback
+            const initials = teamName.split(' ')
+                .map(word => word.charAt(0).toUpperCase())
+                .join('')
+                .substring(0, 2);
+            return `<div class="${className}">${initials}</div>`;
         }
         
-        // Calculate achievement badges for a team (same logic as public)
+        // Calculate achievement badges for a team
         function getTeamBadges(teamName) {
             const badges = [];
             const team = teams.find(t => t.name === teamName);
@@ -543,26 +539,65 @@
             return badges;
         }
         
+        async function authenticateGitHub() {
+            const token = document.getElementById('github-token').value.trim();
+            
+            if (!token) {
+                showStatus('Please enter a GitHub token', 'error');
+                return;
+            }
+            
+            try {
+                // Test the token by trying to fetch the repo info
+                const response = await fetch(`https://api.github.com/repos/${API_CONFIG.owner}/${API_CONFIG.repo}`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.ok) {
+                    githubToken = token;
+                    document.getElementById('auth-panel').style.display = 'none';
+                    await loadData();
+                } else {
+                    showStatus('Invalid token or insufficient permissions', 'error');
+                }
+            } catch (error) {
+                showStatus('Error validating token', 'error');
+            }
+        }
+        
         async function loadData() {
             try {
                 showStatus('Loading data...', 'info');
                 
-                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}/latest`, {
-                    headers: {
-                        'X-Access-Key': API_CONFIG.apiKey
-                    }
-                });
+                // Add cache-busting parameter to avoid stale data
+                const cacheBuster = Date.now();
+                const response = await fetch(`${API_CONFIG.rawUrl}?cb=${cacheBuster}`);
                 
-                if (!response.ok) {
+                if (response.ok) {
+                    const data = await response.json();
+                    teams = data.teams || [];
+                    challenges = data.challenges || [];
+                    
+                    // Also get the file SHA for updates
+                    if (githubToken) {
+                        await getFileSha();
+                    }
+                    
+                    updateAllDisplays();
+                    hideStatus();
+                } else if (response.status === 404) {
+                    // File doesn't exist yet, create it
+                    teams = [];
+                    challenges = [];
+                    await saveData();
+                    updateAllDisplays();
+                    hideStatus();
+                } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                const data = await response.json();
-                teams = data.record.teams || [];
-                challenges = data.record.challenges || [];
-                
-                updateAllDisplays();
-                hideStatus();
                 
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -570,7 +605,30 @@
             }
         }
         
+        async function getFileSha() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${API_CONFIG.owner}/${API_CONFIG.repo}/contents/${API_CONFIG.filePath}`, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    fileSha = data.sha;
+                }
+            } catch (error) {
+                console.error('Error getting file SHA:', error);
+            }
+        }
+        
         async function saveData() {
+            if (!githubToken) {
+                showStatus('GitHub authentication required', 'error');
+                return false;
+            }
+            
             try {
                 const dataToSave = {
                     teams,
@@ -578,25 +636,40 @@
                     lastUpdated: new Date().toISOString()
                 };
                 
-                const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.binId}`, {
+                const content = btoa(JSON.stringify(dataToSave, null, 2));
+                
+                const body = {
+                    message: `Update leaderboard data - ${new Date().toLocaleString()}`,
+                    content: content,
+                    branch: API_CONFIG.branch
+                };
+                
+                if (fileSha) {
+                    body.sha = fileSha;
+                }
+                
+                const response = await fetch(`https://api.github.com/repos/${API_CONFIG.owner}/${API_CONFIG.repo}/contents/${API_CONFIG.filePath}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Key': API_CONFIG.apiKey
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(dataToSave)
+                    body: JSON.stringify(body)
                 });
                 
-                if (!response.ok) {
+                if (response.ok) {
+                    const result = await response.json();
+                    fileSha = result.content.sha;
+                    showStatus('Data saved successfully to GitHub!', 'success');
+                    return true;
+                } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                showStatus('Data saved successfully!', 'success');
-                return true;
-                
             } catch (error) {
                 console.error('Error saving data:', error);
-                showStatus('Error saving data. Please try again.', 'error');
+                showStatus('Error saving data to GitHub', 'error');
                 return false;
             }
         }
@@ -615,6 +688,7 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error-message').style.display = 'block';
             document.getElementById('content').style.display = 'none';
+            document.getElementById('auth-panel').style.display = 'none';
         }
         
         function showStatus(message, type) {
@@ -650,7 +724,7 @@
                 else if (index === 2) rankClass = 'third';
                 
                 const badges = getTeamBadges(team.name);
-                const avatar = getTeamAvatar(team.name, team.avatar, true);
+                const avatar = getTeamAvatar(team.name, team, true);
                 
                 teamRow.className = `team-row ${rankClass}`;
                 teamRow.innerHTML = `
@@ -789,21 +863,14 @@
             const team = teams[teamIndex];
             const challenge = challenges[challengeIndex];
             
-            // Award points locally
             team.score += challenge.points;
             
-            // Track change for batch sync
-            addPendingChange('award', `${team.name}: +${challenge.points} pts (${challenge.name})`, {
-                teamName: team.name,
-                points: challenge.points,
-                reason: challenge.name
-            });
-            
-            // Clear form and update displays
-            document.getElementById('demo-team-select').value = '';
-            document.getElementById('demo-challenge-select').value = '';
-            updateLeaderboardPreview();
-            showStatus(`+${challenge.points} points to ${team.name}! (Not synced yet)`, 'success');
+            if (await saveData()) {
+                document.getElementById('demo-team-select').value = '';
+                document.getElementById('demo-challenge-select').value = '';
+                updateLeaderboardPreview();
+                showStatus(`+${challenge.points} points to ${team.name}!`, 'success');
+            }
         }
         
         async function awardBonusPoints() {
@@ -817,44 +884,15 @@
             }
             
             const team = teams[teamIndex];
-            
-            // Award bonus points locally
             team.score += bonusPoints;
             
-            // Track change for batch sync
-            addPendingChange('bonus', `${team.name}: +${bonusPoints} pts (${reason})`, {
-                teamName: team.name,
-                points: bonusPoints,
-                reason: reason
-            });
-            
-            // Clear form and update displays
-            document.getElementById('bonus-team-select').value = '';
-            document.getElementById('bonus-points').value = '';
-            document.getElementById('bonus-reason').value = '';
-            updateLeaderboardPreview();
-            showStatus(`+${bonusPoints} bonus points to ${team.name}! (Not synced yet)`, 'success');
-        }
-        
-        async function syncToJSONBin() {
-            if (pendingChanges.length === 0) {
-                showStatus('No changes to sync', 'info');
-                return;
-            }
-            
             if (await saveData()) {
-                pendingChanges = [];
-                updatePendingChangesDisplay();
-                showStatus(`Successfully synced all changes to JSONBin!`, 'success');
+                document.getElementById('bonus-team-select').value = '';
+                document.getElementById('bonus-points').value = '';
+                document.getElementById('bonus-reason').value = '';
+                updateLeaderboardPreview();
+                showStatus(`+${bonusPoints} bonus points to ${team.name}!`, 'success');
             }
-        }
-        
-        function clearLocalChanges() {
-            // Reset teams to last saved state by reloading
-            loadData();
-            pendingChanges = [];
-            updatePendingChangesDisplay();
-            showStatus('Cleared local changes and reloaded from JSONBin', 'info');
         }
         
         function exportData() {
@@ -914,10 +952,15 @@
             }
         });
         
+        // Check if GitHub token is stored (for development only)
+        function checkInitialAuth() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('auth-panel').style.display = 'block';
+        }
+        
         // Initialize
         initEmojiGrid();
-        loadData();
-        updatePendingChangesDisplay();
+        checkInitialAuth();
     </script>
 </body>
 </html>
