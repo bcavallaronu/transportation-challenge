@@ -1,5 +1,11 @@
 {
-  "teams": [],
+  "teams": [
+    {
+      "name": "Roux Student Life",
+      "score": 0,
+      "avatar": "🛴"
+    }
+  ],
   "challenges": [
     {
       "name": "Identify nearest bus stop",
@@ -222,5 +228,5 @@
       "category": "Easy"
     }
   ],
-  "lastUpdated": "2025-08-22T15:49:56.455Z"
+  "lastUpdated": "2025-09-15T16:17:14.716Z"
 }
