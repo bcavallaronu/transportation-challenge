@@ -14,6 +14,11 @@
       "name": "Attack of Dino Kale!",
       "score": 0,
       "avatar": "💚"
+    },
+    {
+      "name": "Snack Pack",
+      "score": 0,
+      "avatar": "🚲"
     }
   ],
   "challenges": [
@@ -238,5 +243,5 @@
       "category": "Easy"
     }
   ],
-  "lastUpdated": "2025-09-15T16:20:11.818Z"
+  "lastUpdated": "2025-09-20T00:01:17.719Z"
 }
