@@ -19,6 +19,11 @@
       "name": "Snack Pack",
       "score": 0,
       "avatar": "🚲"
+    },
+    {
+      "name": "Experiential Learning Team",
+      "score": 0,
+      "avatar": "⚡"
     }
   ],
   "challenges": [
@@ -243,5 +248,5 @@
       "category": "Easy"
     }
   ],
-  "lastUpdated": "2025-09-20T00:01:17.719Z"
+  "lastUpdated": "2025-09-20T00:01:32.655Z"
 }
