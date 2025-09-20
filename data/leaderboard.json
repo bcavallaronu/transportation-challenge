@@ -39,6 +39,11 @@
       "name": "Pineapple",
       "score": 0,
       "avatar": "☀️"
+    },
+    {
+      "name": "Rainbow Wheels",
+      "score": 0,
+      "avatar": "🌈"
     }
   ],
   "challenges": [
@@ -263,5 +268,5 @@
       "category": "Easy"
     }
   ],
-  "lastUpdated": "2025-09-20T00:02:13.895Z"
+  "lastUpdated": "2025-09-20T00:12:06.345Z"
 }
