@@ -271,7 +271,12 @@
       "name": "Other (choose your own adventure)",
       "points": 5,
       "category": "Easy"
+    },
+    {
+      "name": "Walk to work/school",
+      "points": 10,
+      "category": "Medium"
     }
   ],
-  "lastUpdated": "2025-09-22T20:35:23.533Z"
+  "lastUpdated": "2025-09-22T20:36:39.197Z"
 }
