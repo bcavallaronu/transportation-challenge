@@ -784,9 +784,15 @@
             // Update challenge dropdown
             const challengeSelect = document.getElementById('demo-challenge-select');
             challengeSelect.innerHTML = '<option value="">Select Challenge</option>';
-            challenges.forEach((challenge, index) => {
+            
+            // Create sorted copy of challenges with original indices
+            const sortedChallenges = challenges
+                .map((challenge, originalIndex) => ({ ...challenge, originalIndex }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            
+            sortedChallenges.forEach(challenge => {
                 const option = document.createElement('option');
-                option.value = index;
+                option.value = challenge.originalIndex;
                 option.textContent = `${challenge.name} (${challenge.points} pts)`;
                 challengeSelect.appendChild(option);
             });
