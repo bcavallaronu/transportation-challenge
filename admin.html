@@ -315,6 +315,66 @@
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
         }
         
+        .challenge-checkboxes {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
+            margin-bottom: 15px;
+        }
+        
+        .challenge-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+        }
+        
+        .challenge-checkbox-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .challenge-checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+        
+        .challenge-checkbox-item label {
+            flex: 1;
+            margin: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .challenge-points {
+            font-weight: bold;
+            color: #007bff;
+            margin-left: 10px;
+        }
+        
+        .points-total {
+            background: #e9ecef;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        
+        .points-total.has-points {
+            background: rgba(0, 123, 255, 0.1);
+            border-color: #007bff;
+            color: #333;
+        }
+        
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .dashboard {
@@ -401,9 +461,16 @@
                         <select id="demo-team-select">
                             <option value="">Select Team</option>
                         </select>
-                        <select id="demo-challenge-select">
-                            <option value="">Select Challenge</option>
-                        </select>
+                        
+                        <h4 style="margin: 15px 0 10px 0; color: #333;">Select Challenges:</h4>
+                        <div id="challenge-checkboxes" class="challenge-checkboxes">
+                            <!-- Challenge checkboxes will be populated here -->
+                        </div>
+                        
+                        <div id="points-total" class="points-total">
+                            Total Points: <strong>0</strong>
+                        </div>
+                        
                         <button onclick="awardPoints()" id="award-points-btn">Award Points</button>
                     </div>
                 </div>
@@ -781,9 +848,14 @@
                 bonusTeamSelect.appendChild(option);
             });
             
-            // Update challenge dropdown
-            const challengeSelect = document.getElementById('demo-challenge-select');
-            challengeSelect.innerHTML = '<option value="">Select Challenge</option>';
+            // Update challenge checkboxes
+            const challengeCheckboxes = document.getElementById('challenge-checkboxes');
+            challengeCheckboxes.innerHTML = '';
+            
+            if (challenges.length === 0) {
+                challengeCheckboxes.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No challenges available</p>';
+                return;
+            }
             
             // Create sorted copy of challenges with original indices
             const sortedChallenges = challenges
@@ -791,11 +863,29 @@
                 .sort((a, b) => a.name.localeCompare(b.name));
             
             sortedChallenges.forEach(challenge => {
-                const option = document.createElement('option');
-                option.value = challenge.originalIndex;
-                option.textContent = `${challenge.name} (${challenge.points} pts)`;
-                challengeSelect.appendChild(option);
+                const checkboxItem = document.createElement('div');
+                checkboxItem.className = 'challenge-checkbox-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `challenge-${challenge.originalIndex}`;
+                checkbox.value = challenge.originalIndex;
+                checkbox.onchange = updatePointsTotal;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `challenge-${challenge.originalIndex}`;
+                label.innerHTML = `
+                    <span>${challenge.name}</span>
+                    <span class="challenge-points">${challenge.points} pts</span>
+                `;
+                
+                checkboxItem.appendChild(checkbox);
+                checkboxItem.appendChild(label);
+                challengeCheckboxes.appendChild(checkboxItem);
             });
+            
+            // Reset points total
+            updatePointsTotal();
         }
         
         async function addTeam() {
@@ -858,25 +948,67 @@
             }
         }
         
+        function updatePointsTotal() {
+            const checkboxes = document.querySelectorAll('#challenge-checkboxes input[type="checkbox"]:checked');
+            let totalPoints = 0;
+            
+            checkboxes.forEach(checkbox => {
+                const challengeIndex = parseInt(checkbox.value);
+                totalPoints += challenges[challengeIndex].points;
+            });
+            
+            const pointsTotal = document.getElementById('points-total');
+            pointsTotal.innerHTML = `Total Points: <strong>${totalPoints}</strong>`;
+            
+            // Add visual indication when points are selected
+            if (totalPoints > 0) {
+                pointsTotal.classList.add('has-points');
+            } else {
+                pointsTotal.classList.remove('has-points');
+            }
+        }
+        
         async function awardPoints() {
             const teamIndex = document.getElementById('demo-team-select').value;
-            const challengeIndex = document.getElementById('demo-challenge-select').value;
+            const selectedCheckboxes = document.querySelectorAll('#challenge-checkboxes input[type="checkbox"]:checked');
             
-            if (teamIndex === '' || challengeIndex === '') {
-                showStatus('Please select both a team and a challenge', 'error');
+            if (teamIndex === '') {
+                showStatus('Please select a team', 'error');
+                return;
+            }
+            
+            if (selectedCheckboxes.length === 0) {
+                showStatus('Please select at least one challenge', 'error');
                 return;
             }
             
             const team = teams[teamIndex];
-            const challenge = challenges[challengeIndex];
+            let totalPoints = 0;
+            const awardedChallenges = [];
             
-            team.score += challenge.points;
+            selectedCheckboxes.forEach(checkbox => {
+                const challengeIndex = parseInt(checkbox.value);
+                const challenge = challenges[challengeIndex];
+                totalPoints += challenge.points;
+                awardedChallenges.push(challenge.name);
+            });
+            
+            team.score += totalPoints;
             
             if (await saveData()) {
+                // Clear selections
                 document.getElementById('demo-team-select').value = '';
-                document.getElementById('demo-challenge-select').value = '';
+                selectedCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updatePointsTotal();
                 updateLeaderboardPreview();
-                showStatus(`+${challenge.points} points to ${team.name}!`, 'success');
+                
+                // Show success message with details
+                const challengeText = awardedChallenges.length === 1 
+                    ? awardedChallenges[0] 
+                    : `${awardedChallenges.length} challenges`;
+                showStatus(`+${totalPoints} points to ${team.name} for ${challengeText}!`, 'success');
             }
         }
         
