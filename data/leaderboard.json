@@ -7,17 +7,17 @@
     },
     {
       "name": "HDI Sustainability Gals",
-      "score": 432,
+      "score": 352,
       "avatar": "♻️"
     },
     {
       "name": "Attack of Dino Kale!",
-      "score": 189,
+      "score": 188,
       "avatar": "💚"
     },
     {
       "name": "Snack Pack",
-      "score": 399,
+      "score": 414,
       "avatar": "🚲"
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "name": "Goldfish Fins",
-      "score": 659,
+      "score": 598,
       "avatar": "🌟"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "name": "Green Power",
-      "score": 963,
+      "score": 948,
       "avatar": "🔋"
     }
   ],
@@ -286,12 +286,7 @@
       "name": "Other (choose your own adventure!)",
       "points": 5,
       "category": "Easy"
-    },
-    {
-      "name": "Take the train to work",
-      "points": 15,
-      "category": "Difficult"
     }
   ],
-  "lastUpdated": "2025-09-26T19:34:08.319Z"
+  "lastUpdated": "2025-09-26T19:34:55.346Z"
 }
